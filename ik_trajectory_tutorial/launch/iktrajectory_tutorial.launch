@@ -1,9 +1,0 @@
-<launch>
-  <!-- load ik -->
-  <include file="$(find pr2_gazebo)/pr2_empty_world.launch"/>
-  <include file="$(find pr2_arm_ik)/launch/pr2_ik_rarm_node.launch"/>
-
-  <!-- listen to joint_states messages and offer them as a service -->
-  <node pkg="joint_states_listener" type="joint_states_listener.py" name="joint_states_listener" />
-
-</launch>
