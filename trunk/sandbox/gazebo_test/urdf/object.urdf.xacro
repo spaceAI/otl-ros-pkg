@@ -1,0 +1,156 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       name="simple_box">
+
+  <!-- *************** JOINT Definition *****************-->
+  <xacro:macro name="my_joint" params="name parent child *axis *origin">
+    <joint name="${name}" type="revolute" >
+      <limit lower="-3" upper="3" effort="10.0" velocity="2.0" />
+      <parent link="${parent}" />
+      <child link="${child}" />
+      <xacro:insert_block name="axis" />
+      <xacro:insert_block name="origin" />
+    </joint>
+  </xacro:macro>
+
+  <!-- *************** LINK Definition *****************-->
+  <xacro:macro name="my_link" params="name mass color z *box">
+    <link name="${name}">
+      <inertial>
+  	<mass value="${mass}" />
+	<!-- center of mass (com) is defined w.r.t. link local coordinate system  -->
+  	<origin xyz="0 0 ${z}" />
+
+  	<inertia  ixx="${0.001 * mass}" ixy="0.0"  ixz="0.0"  iyy="${0.001 * mass}"  iyz="0.0"  izz="${0.001 * mass}" />
+      </inertial>
+      <visual>
+	<!-- visual origin is defined w.r.t. link local coordinate system -->
+  	<origin xyz="0 0 ${z}" rpy="0 0 0" />
+  	<geometry name="${name}_visual_geom">
+          <xacro:insert_block name="box" />
+  	</geometry>
+      </visual>
+      <collision>
+	<!-- collision origin is defined w.r.t. link local coordinate system  -->
+  	<origin xyz="0 0 ${z}" rpy="0 0 0 " />
+  	<geometry name="${name}_collision_geom">
+          <xacro:insert_block name="box" />
+  	</geometry>
+      </collision>
+    </link>
+    <gazebo reference="${name}">
+      <material>Gazebo/${color}</material>
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+  </xacro:macro>
+
+  <!-- *************** LEG Definition *****************-->
+  <xacro:macro name="my_leg" params="name y">
+    <!-- joint definition -->
+
+    <xacro:my_joint name="${name}_joint1" parent="torso_link1" child="${name}_link1">
+      <axis xyz="1 0 0"/>
+      <origin xyz="0 ${y * 0.05} 0.0" rpy="0 0 0" />
+    </xacro:my_joint>
+    <xacro:my_joint name="${name}_joint2" parent="${name}_link1" child="${name}_link2">
+      <axis xyz="0 1 0"/>
+      <origin xyz="0 0 -0.02" rpy="0 0 0" />
+    </xacro:my_joint>
+    <xacro:my_joint name="${name}_joint3" parent="${name}_link2" child="${name}_link3">
+      <axis xyz="0 1 0"/>
+      <origin xyz="0 0 -0.04" rpy="0 0 0" />
+    </xacro:my_joint>
+    <xacro:my_joint name="${name}_joint4" parent="${name}_link3" child="${name}_link4">
+      <axis xyz="0 1 0"/>
+      <origin xyz="0 0 -0.04" rpy="0 0 0" />
+    </xacro:my_joint>
+    <xacro:my_joint name="${name}_joint5" parent="${name}_link4" child="${name}_link5">
+      <axis xyz="1 0 0"/>
+      <origin xyz="0 0 -0.04" rpy="0 0 0" />
+    </xacro:my_joint>
+    
+    <xacro:my_link name="${name}_link1" mass="0.1" z="0.0" color="Blue">
+      <box size="0.07 0.03 0.04" />
+   </xacro:my_link>
+    <xacro:my_link name="${name}_link2" mass="0.1" z="-0.02" color="Red">
+      <box size="0.07 0.06 0.04" />
+    </xacro:my_link>
+    <xacro:my_link name="${name}_link3" mass="0.1" z="-0.02" color="Green">
+      <box size="0.07 0.06 0.04" />
+    </xacro:my_link>
+    <xacro:my_link name="${name}_link4" mass="0.2" z="-0.02" color="Blue">
+      <box size="0.10 0.06 0.04" />
+    </xacro:my_link>
+    <xacro:my_link name="${name}_link5" mass="0.2" z="-0.01" color="White">
+      <box size="0.2 0.08 0.02" />
+    </xacro:my_link>
+  </xacro:macro>
+  
+
+  <!-- *************** ARM Definition *****************-->
+  <xacro:macro name="my_arm" params="name y">
+    <!-- joint definition -->
+
+    <xacro:my_joint name="${name}_joint1" parent="torso_link1" child="${name}_link1">
+      <axis xyz="0 1 0"/>
+      <origin xyz="0 ${y * 0.08} 0.15" rpy="0 0 0" />
+    </xacro:my_joint>
+    
+    <xacro:my_joint name="${name}_joint2" parent="${name}_link1" child="${name}_link2">
+      <axis xyz="1 0 0"/>
+      <origin xyz="0 ${y * 0.03} 0.01" rpy="0 0 0" />
+    </xacro:my_joint>
+
+    <xacro:my_joint name="${name}_joint3" parent="${name}_link2" child="${name}_link3">
+      <axis xyz="1 0 0"/>
+      <origin xyz="0 0 -0.085" rpy="0 0 0" />
+    </xacro:my_joint>
+
+    <xacro:my_link name="${name}_link1" mass="0.1" z="0.0" color="Blue">
+      <box size="0.05 0.030 0.02" />
+   </xacro:my_link>
+    <xacro:my_link name="${name}_link2" mass="0.1" z="-0.035" color="Red">
+      <box size="0.05 0.03 0.07" />
+    </xacro:my_link>
+    <xacro:my_link name="${name}_link3" mass="0.1" z="-0.035" color="Green">
+      <box size="0.05 0.03 0.10" />
+    </xacro:my_link>
+  </xacro:macro>
+
+  <!-- *************** HEAD Definition *****************-->
+  <xacro:macro name="my_head" params="name">
+    <!-- joint definition -->
+
+    <xacro:my_joint name="${name}_joint1" parent="torso_link1" child="${name}_link1">
+      <axis xyz="0 0 1"/>
+      <origin xyz="0 0 0.2" rpy="0 0 0" />
+    </xacro:my_joint>
+
+    <xacro:my_link name="${name}_link1" mass="0.1" z="0.0" color="Green">
+      <box size="0.08 0.07 0.05" />
+    </xacro:my_link>
+  </xacro:macro>
+
+  <!-- *************** TORSO Definition *****************-->
+  <xacro:my_link name="torso_link1" mass="0.1" z="0.1" color="Blue">
+    <box size="0.12 0.15 0.15" />
+  </xacro:my_link>
+
+  <xacro:my_leg name="my_rleg" y="1" />
+  <xacro:my_leg name="my_lleg" y="-1" />
+
+  <xacro:my_arm name="my_rarm" y="1" />
+  <xacro:my_arm name="my_larm" y="-1" />
+
+  <xacro:my_head name="my_head1" />
+
+  <gazebo>
+    <controller:gazebo_ros_test name="gazebo_ros_test" plugin="libgazebo_ros_test.so">
+      <interface:audio name="gazebo_ros_test_dummy_interface" />
+      <alwaysOn>true</alwaysOn>
+      <updateRate>1.0</updateRate>
+      <timeout>5</timeout>
+    </controller:gazebo_ros_test>
+  </gazebo>
+</robot>

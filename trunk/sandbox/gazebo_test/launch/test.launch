@@ -1,0 +1,5 @@
+<launch>
+  <include file="$(find gazebo)/launch/empty_world.launch"/>
+  <node name="test_gazebo_model" pkg="gazebo_tools" type="gazebo_model" args="-f $(find gazebo_test)/urdf/object.urdf -z 0.4 spawn my_object" respawn="false" output="screen" />
+
+</launch>
