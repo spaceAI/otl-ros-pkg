@@ -16,14 +16,13 @@ class RoombaJoy:
     """
     control joystick by PS3 controller
     """
-    _yaw_gain = 20000
-    _pitch_gain = 200
-    _dv = 10
 
     def __init__(self):
         self._speed = 100
-
-    def _sendVelCB(self, joy):
+        self._yaw_gain = 20000
+        self._pitch_gain = 200
+        self._dv = 10
+    def _send_vel_cb(self, joy):
         v = VelRad()
         if joy.buttons[12] == 1:
             self._speed += self._dv
@@ -38,11 +37,11 @@ class RoombaJoy:
                 self._speed = -SPEEDLIMIT
             yaw = joy.axes[16]
             if (yaw > 0):
-                r = self._yaw_gain * yaw - MAXRADIUS
+                r = self._yaw_gain * yaw - MAXRAD
                 if r >= 0:
                     r = -1
             else:
-                r = self._yaw_gain * yaw + MAXRADIUS
+                r = self._yaw_gain * yaw + MAXRAD
                 if r <= 0:
                     r = 1
 #            print "%f %d" % (yaw, r)
@@ -51,16 +50,16 @@ class RoombaJoy:
             v.rad = r
         elif joy.buttons[6] == 1:
             v.vel = -self._speed
-            v.rad = STRAIGHTRADIUS
+            v.rad = STRAIGHTRAD
         elif joy.buttons[5] == 1:
             v.vel = self._speed
-            v.rad = CWRADIUS
+            v.rad = CWRAD
         elif joy.buttons[7] == 1:
             v.vel = self._speed
-            v.rad = CCWRADIUS
+            v.rad = CCWRAD
         else:
             v.vel = 0
-            v.rad = STRAIGHTRADIUS
+            v.rad = STRAIGHTRAD
         self._vel_pub.publish(v)
 
         if joy.buttons[13] == 1:
@@ -72,7 +71,7 @@ class RoombaJoy:
         rospy.init_node('teleop_roomba')
         self._vel_pub = rospy.Publisher('roomba/command', VelRad)
         self._clean_pub = rospy.Publisher('roomba/clean', Bool)
-        rospy.Subscriber('joy', Joy, self._sendVelCB, queue_size=1)
+        rospy.Subscriber('joy', Joy, self._send_vel_cb, queue_size=1)
 
         rospy.spin()
 
