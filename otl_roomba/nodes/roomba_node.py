@@ -4,32 +4,19 @@ roslib.load_manifest('otl_roomba')
 
 import rospy
 from otl_roomba.roombaif import *
+from roomba_base_node import *
 from otl_roomba.msg import VelRad
 from std_msgs.msg import Bool
 
 
-class RoombaNode:
+class RoombaNode(RoombaBaseNode):
     """
-    roomba interface for ROS
+    roomba interface for ROS (controlled by vel and rad)
     """
-    def __init__(self):
-        self._rmb = RoombaIf()
-        self._rmb.setup()
-
     def _send_vel_cb(self, command):
         self._rmb.set_vel(command.vel, command.rad)
 
-    def _send_clean_cb(self, command):
-        if command.data:
-            self._rmb.clean_on()
-        else:
-            self._rmb.clean_off()
-
-    def close(self):
-        self._rmb.close()
-
     def main(self):
-        rospy.init_node('roomba')
         rospy.Subscriber('roomba/command',
                          VelRad, self._send_vel_cb, queue_size=1)
         rospy.Subscriber('roomba/clean',
