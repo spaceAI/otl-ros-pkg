@@ -60,14 +60,13 @@ class TestRoombaNotOpenCommand(unittest.TestCase):
     def test_led(self):
         self.assertRaises(RoombaError, self._rmb.set_degit, 100, 100, 100, 100)
 
-
 class TestRoombaCommand(unittest.TestCase):
     def setUp(self):
         self._rmb = RoombaIf()
         self._rmb.setup()
 
     def teardown(self):
-        self._rmb.teardown()
+        self._rmb.close()
 
     def test_command1(self):
         self.assertRaises(RoombaError, self._rmb._send_command, 999)
@@ -198,9 +197,32 @@ class TestRoombaCommand(unittest.TestCase):
     def test_ascii2(self):
         self.assertRaises(RoombaError, self._rmb.set_ascii, 132)
 
+    def test_sync(self):
+        self._rmb.sync_time()
+
+class TestRoombaSensor(unittest.TestCase):
+    def setUp(self):
+        self._rmb = RoombaIf()
+        self._rmb.setup()
+        import time
+        time.sleep(1)
+
+    def teardown(self):
+        self._rmb.close()
+
+    def test_sensors(self):
+        print 'dist = ',self._rmb.get_distance()
+        print 'angle =',self._rmb.get_angle()
+        print 'voltage =',self._rmb.get_voltage()
+        print 'current =',self._rmb.get_current()
+        print 'temperature =',self._rmb.get_temperature()
+        print 'battery_charge =',self._rmb.get_battery_charge()
+
 
 if __name__ == '__main__':
     import rostest
 #    test_support.run_unittest(TestRoombaOpen, TestRoombaCommand)
-    rostest.unitrun('test_roombaif', 'test_roomba_open', TestRoombaOpen)
+    rostest.unitrun('test_roombaif', 'test_roomba_not_open', TestRoombaNotOpenCommand)
     rostest.unitrun('test_roombaif', 'test_roomba_command', TestRoombaCommand)
+    rostest.unitrun('test_roombaif', 'test_roomba_sensor', TestRoombaSensor)
+    rostest.unitrun('test_roombaif', 'test_roomba_open', TestRoombaOpen)
