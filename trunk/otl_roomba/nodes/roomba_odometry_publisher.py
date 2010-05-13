@@ -7,7 +7,7 @@ from otl_roomba.roombaif import *
 import tf
 import geometry_msgs
 from nav_msgs.msg import Odometry
-from math import cos,sin
+from math import cos,sin,radians
 
 class RoombaOdometryPublisher:
     def __init__(self, rmb):
@@ -27,29 +27,32 @@ class RoombaOdometryPublisher:
 
         # get vel(diff) from roomba
         if not self._rmb._debug:
-            self._vel[0] = self._rmb.get_distance()
+            self._vel[0] = self._rmb.get_distance() * -0.01 # ???
             self._vel[1] = 0
-            self._vel[2] = self._rmb.get_angle()
+            self._vel[2] = radians(self._rmb.get_angle()) * 2 # ???
         else:
             self._vel[0] = 0.1
             self._vel[1] = 0
             self._vel[2] = 0.1
-            
+
+        print "vel =", self._vel
+
         #compute odometry in a typical way given the velocities of the robot
-        dt = (self._current_time - self._last_time).to_sec()
+        #dt = (self._current_time - self._last_time).to_sec()
         delta_x = (self._vel[0] * cos(self._pos[2]) -
-                   self._vel[1] * sin(self._pos[2])) * dt
+                   self._vel[1] * sin(self._pos[2]))
         delta_y = (self._vel[0] * sin(self._pos[2]) +
-                   self._vel[1] * cos(self._pos[2])) * dt
-        delta_th = self._vel[2] * dt
+                   self._vel[1] * cos(self._pos[2]))
+        delta_th = self._vel[2]
         
         self._pos[0] += delta_x
         self._pos[1] += delta_y
         self._pos[2] += delta_th
 
+        rospy.loginfo(self._pos[2])
+
         #since all odometry is 6DOF we'll need a quaternion created from yaw
         odom_quat = tf.transformations.quaternion_from_euler(0, 0, self._pos[2])
-        
 
         #send the transform
         self._br.sendTransform((self._pos[0], self._pos[1], 0),
@@ -57,6 +60,15 @@ class RoombaOdometryPublisher:
                                self._current_time,
                                "base_link",
                                "odom"
+                               )
+
+        #send the transform
+        quat = tf.transformations.quaternion_from_euler(0, 0, 0)
+        self._br.sendTransform((0, 0, 0.1),
+                               quat,
+                               self._current_time,
+                               "laser",
+                               "base_link"
                                )
 
         #next, we'll publish the odometry message over ROS
@@ -90,7 +102,8 @@ class RoombaOdometryPublisher:
 
 if __name__ == '__main__':
     rospy.init_node('roomba_odometry_publisher')
-    rmb = RoombaIf(debug=True)
+    rmb = RoombaIf()
+    rmb.setup()
     rop = RoombaOdometryPublisher(rmb)
 
     rate = rospy.Rate(1)

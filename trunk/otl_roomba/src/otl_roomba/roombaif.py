@@ -331,6 +331,7 @@ class RoombaIf(object):
     def _get_short_sensor(self, sensor_id):
         self._get_sensor(sensor_id)
         raw_data = self._receive_data(2)
+
         try:
             num_data = struct.unpack(">h", raw_data)
         except struct.error:
