@@ -1,0 +1,16 @@
+<package>
+  <description brief="2dnav_otl_roomba">
+
+     2dnav_otl_roomba
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/2dnav_otl_roomba</url>
+  <depend package="move_base"/>
+  <depend package="otl_roomba"/>
+
+</package>
+
+
