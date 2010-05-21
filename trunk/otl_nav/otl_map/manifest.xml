@@ -1,0 +1,14 @@
+<package>
+  <description brief="otl_map">
+
+     otl_map
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/otl_map</url>
+
+</package>
+
+
