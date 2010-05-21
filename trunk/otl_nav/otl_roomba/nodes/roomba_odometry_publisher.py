@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+#
+# roomba odometry publisher
+#
+# 2010/05/21 first not tested
+#
+# by OTL <t.ogura@gmail.com>
+#
+
+
 #system
 from math import cos,sin,radians, degrees
 import copy
@@ -41,7 +50,6 @@ class RoombaOdometryPublisher:
             self._diff[2] = 0.1
 
         rospy.logerr( "diff =%f %f %f" %(self._diff[0], self._diff[1], self._diff[2]))
-#        rospy.loginfo( "xy =(%f, %f)  theta = %f" %(self._pos[0], self._pos[1], degrees(self._pos[2])))
 
         #compute odometry in a typical way given the velocities of the robot
         dt = (self._current_time - self._last_time).to_sec()
@@ -51,12 +59,6 @@ class RoombaOdometryPublisher:
                    self._diff[1] * cos(self._pos[2]))
         delta_th = self._diff[2]
 
-#        delta_x = (self.vel[0] * cos(self._pos[2]) -
-#                   self.vel[1] * sin(self._pos[2])) * dt
-#        delta_y = (self.vel[0] * sin(self._pos[2]) +
-#                   self.vel[1] * cos(self._pos[2])) * dt
-#        delta_th = self.vel[2] * dt
-        
         self._pos[0] += delta_x
         self._pos[1] += delta_y
         self._pos[2] += delta_th
@@ -90,13 +92,6 @@ class RoombaOdometryPublisher:
                                "odom",
                                "map"
                                )
-
-#        self._br.sendTransform((0, 0, 0),
-#                               quat,
-#                               self._current_time,
-#                               "odom",
-#                               "map"
-#                               )
 
         #next, we'll publish the odometry message over ROS
         odom = Odometry()
