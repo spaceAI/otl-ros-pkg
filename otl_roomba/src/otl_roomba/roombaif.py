@@ -81,7 +81,7 @@ DEFAULT_BAUD = 115200
 #
 # parameters
 #
-WHEEL_OFFSET = 230  #[mm]
+WHEEL_OFFSET = 225  #[mm]
 
 class RoombaIf(object):
     """
@@ -103,6 +103,9 @@ class RoombaIf(object):
         self.set_led(SPOTLED, 0, 150)
         self.set_led(DEBRISLED | CHECKLED | DOCKLED | SPOTLED, 0, 200)
         self.set_led(DEBRISLED | CHECKLED | DOCKLED | SPOTLED, 100, 200)
+        #reset odom
+        self.get_distance()
+        self.get_angle()
         if otl:
             self.set_otl()
 
@@ -206,6 +209,14 @@ class RoombaIf(object):
             raise RoombaError('set vel inval error')
         self._send_command(cmd)
         return (vel_r, vel_l)
+
+    # mm/s + rad/s
+    def set_twist_vel(self, vel_trans, vel_rot):
+        ts = vel_trans
+        tw = vel_rot * (WHEEL_OFFSET / 2)
+        vel_r = int(ts + tw)
+        vel_l = int(ts - tw)
+        self.set_direct_vel(vel_r, vel_l)
 
     def clean_off(self):
         try:
@@ -364,12 +375,14 @@ class RoombaIf(object):
         right = ((data >> 2) & 1) == 1
         left = ((data >> 3) & 1) == 1
         return (right, left)
-       
-    def get_distance(self):
-        return self._get_short_sensor(19)
 
+    # mm
+    def get_distance(self):
+        return -8 * self._get_short_sensor(19) # why * 8 ???
+
+    # deg
     def get_angle(self):
-        return self._get_short_sensor(20)
+        return (3 * self._get_short_sensor(20)) # why * 3 ???
 
     def get_voltage(self):
         return self._get_ushort_sensor(22)
@@ -383,11 +396,23 @@ class RoombaIf(object):
     def get_battery_charge(self):
         return self._get_ushort_sensor(25)
 
+    def get_mode(self):
+        num = self._get_byte_sensor(35)
+        if num == 0:
+            mode = 'OFF'
+        elif num == 1:
+            mode = 'PASSIVE'
+        elif num == 2:
+            mode = 'SAFE'
+        elif num == 3:
+            mode = 'FULL'
+        else:
+            raise RoombaError('fatal receive data error')
+        return mode
 
     def _song_test(self):
         self.set_song(0, ((60, 32), (64, 32), (60, 32), (64, 32)))
-        self.set_song(1, ((60, 16), (64, 16), (60, 16), (64, 16)))
-#        self.play_song(0)
+        self.set_song(1, ((60, 8), (64, 8)))
         self.play_song(1)
 
 
@@ -414,7 +439,18 @@ __all__ = [
     ]
 
 if __name__ == '__main__':
-    r = RoombaIf()
+    r = RoombaIf(full=True)
     r.setup()
+    time.sleep(1.0)
+    r.get_distance()
+    r.get_angle()
+    import math
+    r.set_twist_vel(80, math.radians(0))
+    import time
+    time.sleep(1.0)
+    r.set_direct_vel(0, 0)
+    print r.get_distance() # mm
+    print r.get_angle() # deg 
+
 #    r._song_test()
 #    r.teardown()
