@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+
+#
+# Roomba OI interface
+# New BSD Liscense
+#
+# 2010.5.21 commented initially
+# by OTL <t.ogura@gmail.com>
+#
+
 import serial
 import time
 import struct
@@ -89,12 +98,21 @@ class RoombaIf(object):
     this soft use usb serial port for controlling the robot.
     """
     def __init__(self, full=False, debug=False, device=DEFAULT_DEVICE):
+        """
+        initialize parameters.
+        this does not connect to roomba.
+        please use setup to connect it after initialized.
+        """
         self._opened = False
         self._full = full
         self._debug = debug
         self._device = device
 
     def setup(self, otl=True):
+        """
+        open device and initialize LED and odometry.
+        and if otl=True then beep and display 'OTL' on 7-Seg LED.
+        """
         self.open(self._device)
         self.activate(full=self._full)
         self.set_led(DEBRISLED, 0, 0)
@@ -106,15 +124,24 @@ class RoombaIf(object):
         #reset odom
         self.get_distance()
         self.get_angle()
+        # 'OTL'
         if otl:
             self.set_otl()
 
     def teardown(self):
+        """
+        connection close.
+        After this method, you can control nothing!
+        """
         self._send_command(POWERCMD)
         # anyway close
         self.close()
 
     def open(self, dev=DEFAULT_DEVICE):
+        """
+        Open the serial port of the roomba.
+        timeout is 0.1sec.
+        """
         if not self._debug:
             try:
                 self._ser = serial.Serial(dev,
@@ -126,10 +153,15 @@ class RoombaIf(object):
             self._opened = True
 
     def close(self):
+        """close the serial port
+        """
         if self._opened:
             self._ser.close()
 
     def _send_command(self, cmd):
+        """
+        send roomba command (internal use)
+        """
         if not self._debug and not self._opened:
             raise RoombaError('not opened')
         if isinstance(cmd, int) and cmd in COMMAND_LIST:
@@ -154,6 +186,9 @@ class RoombaIf(object):
             raise RoombaError('command type error')
 
     def _receive_data(self, num):
+        """
+        receive sensor data from roomba
+        """
         if not self._debug and not self._opened:
             raise RoombaError('not opened')
         if not self._debug:
@@ -166,6 +201,9 @@ class RoombaIf(object):
             return data
 
     def set_vel(self, vel, rad):
+        """set the roomba velocity by linear velocity and radius.
+        the speed is limited by MAXVEL.
+        """
         if not isinstance(vel, int) or not isinstance(rad, int):
             raise RoombaError('set vel inval error')
         if vel > MAXVEL:
@@ -188,6 +226,8 @@ class RoombaIf(object):
         return (vel, rad)
 
     def set_direct_vel(self, vel_r, vel_l):
+        """set the velocity of the roomba by right wheel speed and left wheel speed.
+        """
         if not isinstance(vel_r, int) or not isinstance(vel_l, int):
             raise RoombaError('set vel inval error')
         if vel_r > MAXVEL:
@@ -212,6 +252,8 @@ class RoombaIf(object):
 
     # mm/s + rad/s
     def set_twist_vel(self, vel_trans, vel_rot):
+        """set the roomba speed by linear vel (mm/s) and rotational vel(rad/s)
+        """
         ts = vel_trans
         tw = vel_rot * (WHEEL_OFFSET / 2)
         vel_r = int(ts + tw)
@@ -219,6 +261,8 @@ class RoombaIf(object):
         self.set_direct_vel(vel_r, vel_l)
 
     def clean_off(self):
+        """turn off the clearning motors.
+        """
         try:
             cmd = struct.pack('BB', MOTORSCMD, 0)
         except:
@@ -226,6 +270,8 @@ class RoombaIf(object):
         self._send_command(cmd)
 
     def clean_on(self):
+        """turn on the all clearning motors.
+        """
         try:
             cmd = struct.pack('BB', MOTORSCMD, 7)
         except struct.error:
@@ -233,6 +279,12 @@ class RoombaIf(object):
         self._send_command(cmd)
 
     def set_led(self, bits, color, power):
+        """set the main leds.
+        you can use like below..
+        self.set_led(DEBRISLED | CHECKLED | DOCKLED | SPOTLED, 0, 200)
+        color and power are for main large button LED.
+        color : 0 = red << green =255
+        """
         if not (0 <= bits <= 255 and
                 0 <= color <= 255 and
                 0 <= power <= 255):
@@ -244,6 +296,10 @@ class RoombaIf(object):
         self._send_command(cmd)
 
     def set_degit(self, d1, d2, d3, d4):
+        """set the 7-seg LED by degit.
+        please see the Roomba OI document for details.
+        if you want to write letters, please use set_ascii method instead.
+        """
         if not (0 <= d1 <= 255 and
                 0 <= d2 <= 255 and
                 0 <= d3 <= 255 and
@@ -256,10 +312,15 @@ class RoombaIf(object):
         return self._send_command(cmd)
 
     def set_otl(self):
+        """OTL special method!
+        """
         self.set_degit(63, 7, 1, 56)
         self._song_test()
 
     def set_ascii(self, ltr):
+        """ you can easily set the ascii on 7-seg LED.
+        you can set only 4 letters.
+        """
         if isinstance(ltr, basestring) and len(ltr) == 4:
             try:
                 cmd = struct.pack('>Bcccc', ASCIICMD, ltr[0], ltr[1], ltr[2], ltr[3])
@@ -270,12 +331,18 @@ class RoombaIf(object):
         self._send_command(cmd)
 
     def activate(self, full=False):
+        """activate the OI interface.
+        default mode is 'SAFE': if you hold up the roomba or bump to the wall, the roomba stop.
+        if you want to disable the safe functions, you can use full=True.
+        """
         self._send_command(STARTCMD)
         self._send_command(SAFECMD)
         if full:
             self._send_command(FULLCMD)
 
     def sync_time(self):
+        """synclonize the clock between PC and the roomba.
+        """
         d = datetime.datetime.today()
         date = d.weekday() + 1
         if date == 7:
@@ -287,6 +354,10 @@ class RoombaIf(object):
         self._send_command(bb)
         
     def set_song(self, index, song_dat):
+        """set the song data to index.
+
+        after this method you can call play_song.
+        """
         if index > 4 or index < 0:
             raise RoombaError('song index must be 0 - 4')
         # song_dat = ((note1, duration1), (note2, duration2), ...)
@@ -300,6 +371,8 @@ class RoombaIf(object):
         self._send_command(bb)
 
     def play_song(self, index):
+        """after set_song, you can play_song.
+        """
         if index > 4 or index < 0:
             raise RoombaError('song index must be 0 - 4')
         try:
@@ -309,9 +382,15 @@ class RoombaIf(object):
         self._send_command(bb)
 
     def start_sensor_stream(self):
+        """start the sensor stream. (not implemented yet)
+        please use get_sensor method to receive data from roomba.
+        """
         pass
 
     def _get_sensor(self, sensor_id):
+        """request the data of sensor_id.
+        after this method you can read the data by _receive_data
+        """
         try:
             bb = struct.pack('BB', SENSORCMD, sensor_id)
         except struct.error:
@@ -378,25 +457,43 @@ class RoombaIf(object):
 
     # mm
     def get_distance(self):
+        """ get the odometry of translation (mm)
+        
+        after call this method odometry(distance) is reseted.
+        """
         return -8 * self._get_short_sensor(19) # why * 8 ???
 
     # deg
     def get_angle(self):
+        """ get the odometry of rotation (deg)
+        
+        after call this method odometry(angle) is reseted.
+        """
         return (3 * self._get_short_sensor(20)) # why * 3 ???
 
     def get_voltage(self):
+        """get the battery voltage (mV)
+        """
         return self._get_ushort_sensor(22)
 
     def get_current(self):
+        """get the battery current
+        """
         return self._get_short_sensor(23)
 
     def get_temperature(self):
+        """get the battery temperature
+        """
         return self._get_char_sensor(24)
 
     def get_battery_charge(self):
+        """get the battery charge
+        """
         return self._get_ushort_sensor(25)
 
     def get_mode(self):
+        """get the mode of OI
+        """
         num = self._get_byte_sensor(35)
         if num == 0:
             mode = 'OFF'
@@ -411,6 +508,10 @@ class RoombaIf(object):
         return mode
 
     def _song_test(self):
+        """this method is used by set_otl method.
+
+        play some sound for showing the roomba OI activated.
+        """
         self.set_song(0, ((60, 32), (64, 32), (60, 32), (64, 32)))
         self.set_song(1, ((60, 8), (64, 8)))
         self.play_song(1)
