@@ -49,7 +49,12 @@ class RoombaOdometryPublisher:
             self._diff[1] = 0
             self._diff[2] = 0.1
 
-        rospy.logerr( "diff =%f %f %f" %(self._diff[0], self._diff[1], self._diff[2]))
+#        rospy.logerr( "diff =%f %f %f" %(self._diff[0], self._diff[1], self._diff[2]))
+        # TODO
+        # ignore if big num ... this is BUG may be...
+        if abs(self._diff[0]) > 1 or abs(self._diff[2]) > 1:
+            self._diff[0] = 0
+            self._diff[2] = 0
 
         #compute odometry in a typical way given the velocities of the robot
         dt = (self._current_time - self._last_time).to_sec()
@@ -85,13 +90,13 @@ class RoombaOdometryPublisher:
                                )
 
         #send the transform
-        quat = tf.transformations.quaternion_from_euler(0, 0, 0)
-        self._br.sendTransform((0.0, 0, 0.0),
-                               quat,
-                               self._current_time,
-                               "odom",
-                               "map"
-                               )
+#        quat = tf.transformations.quaternion_from_euler(0, 0, 0)
+#        self._br.sendTransform((0.0, 0, 0.0),
+#                               quat,
+#                               self._current_time,
+#                               "odom",
+#                               "map"
+#                               )
 
         #next, we'll publish the odometry message over ROS
         odom = Odometry()
