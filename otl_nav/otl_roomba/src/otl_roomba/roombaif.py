@@ -469,7 +469,8 @@ class RoombaIf(object):
         
         after call this method odometry(angle) is reseted.
         """
-        return (3 * self._get_short_sensor(20)) # why * 3 ???
+#        return (3 * self._get_short_sensor(20)) # why * 3 ??? for mapping
+        return (1.5 * self._get_short_sensor(20)) # why * 3 ???
 
     def get_voltage(self):
         """get the battery voltage (mV)
