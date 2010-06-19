@@ -92,6 +92,11 @@ DEFAULT_BAUD = 115200
 #
 WHEEL_OFFSET = 225  #[mm]
 
+class RoombaState(object):
+    """Roomba sensor state object
+    """
+    pass
+
 class RoombaIf(object):
     """
     control interface for Roomba OI.
@@ -383,11 +388,11 @@ class RoombaIf(object):
 
     def start_sensor_stream(self):
         """start the sensor stream. (not implemented yet)
-        please use get_sensor method to receive data from roomba.
+        please use _request_sensor method to receive data from roomba.
         """
         pass
 
-    def _get_sensor(self, sensor_id):
+    def _request_sensor(self, sensor_id):
         """request the data of sensor_id.
         after this method you can read the data by _receive_data
         """
@@ -399,7 +404,7 @@ class RoombaIf(object):
         self._send_command(bb)
     
     def _get_byte_sensor(self, sensor_id):
-        self._get_sensor(sensor_id)
+        self._request_sensor(sensor_id)
         raw_data = self._receive_data(1)
         try:
             num_data = struct.unpack("B", raw_data)
@@ -409,7 +414,7 @@ class RoombaIf(object):
         return data
 
     def _get_char_sensor(self, sensor_id):
-        self._get_sensor(sensor_id)
+        self._request_sensor(sensor_id)
         raw_data = self._receive_data(1)
         try:
             num_data = struct.unpack("b", raw_data)
@@ -419,7 +424,7 @@ class RoombaIf(object):
         return data
 
     def _get_short_sensor(self, sensor_id):
-        self._get_sensor(sensor_id)
+        self._request_sensor(sensor_id)
         raw_data = self._receive_data(2)
 
         try:
@@ -430,7 +435,7 @@ class RoombaIf(object):
         return data
 
     def _get_ushort_sensor(self, sensor_id):
-        self._get_sensor(sensor_id)
+        self._request_sensor(sensor_id)
         raw_data = self._receive_data(2)
         try:
             num_data = struct.unpack(">H", raw_data)
@@ -469,8 +474,8 @@ class RoombaIf(object):
         
         after call this method odometry(angle) is reseted.
         """
-#        return (3 * self._get_short_sensor(20)) # why * 3 ??? for mapping
-        return (1.5 * self._get_short_sensor(20)) # why * 3 ???
+        return (3 * self._get_short_sensor(20)) # why * 3 ??? for mapping
+#        return (2 * self._get_short_sensor(20)) # why * 3 ???
 
     def get_voltage(self):
         """get the battery voltage (mV)
@@ -491,6 +496,7 @@ class RoombaIf(object):
         """get the battery charge
         """
         return self._get_ushort_sensor(25)
+
 
     def get_mode(self):
         """get the mode of OI

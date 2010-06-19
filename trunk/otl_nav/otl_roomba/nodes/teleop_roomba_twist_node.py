@@ -41,8 +41,8 @@ class RoombaTwistJoy():
     def __init__(self):
         self._speed = 100.0
         self._rot = 0.0
-        self._yaw_gain = -400
-        self._pitch_gain = 5000
+        self._yaw_gain = -800
+        self._pitch_gain = 2
     def _send_vel_cb(self, joy):
         tw = Twist()
         if joy.buttons[4] == 1:
