@@ -16,7 +16,7 @@ class RoombaTwistNode(RoombaBaseNode):
     """
     def _send_vel_cb(self, twist):
         self._rmb.set_twist_vel(twist.linear.x * 1000, twist.angular.z)
-        self._odom.vel = [0.001 * twist.linear.x, 0, twist.angular.z]
+        self._odom.vel = [twist.linear.x, 0, twist.angular.z]
 #        self._odom.proc()
 #        if ( self._rmb.get_voltage() < 12 * 1000):
 #            self._rmb.play_song(0)
