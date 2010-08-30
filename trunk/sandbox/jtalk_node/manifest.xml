@@ -1,0 +1,20 @@
+<package>
+  <description brief="jtalk_node using AquesTalk">
+
+    jtalk_node is Japanese talk node.
+    jtalk_node uses AquesTalk(http://www.a-quest.com/download/index.html).
+    It subscribe /talk (std_msgs/String) and speak it.
+    /talk is Roman style Japanese, like "Konnichiwa".
+    play command of "sox" is used for play sound data.
+    
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/jtalk_node</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <rosdep name="sox"/>
+</package>
+
+
