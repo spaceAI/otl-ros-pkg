@@ -1,0 +1,16 @@
+<package>
+  <description brief="fake_voice_recog is fake voice recognizer">
+
+    fake_voice_recog can recognize volume of voice.
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/fake_voice_recog</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="std_srvs"/>
+</package>
+
+
