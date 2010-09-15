@@ -1,0 +1,25 @@
+<launch>
+  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+    <param name="video_device" value="/dev/video0" />
+    <param name="image_width" value="320" />
+    <param name="image_height" value="240" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap" />
+  </node>
+  <node name="img_filter" pkg="lv1_image" type="img_filter" respawn="false" output="screen" >
+<!--     <param name="hue" value="120" /> -->
+<!--     <param name="hue_range" value="5" /> -->
+    <param name="hue/max" value="30" />
+    <param name="hue/min" value="150" />
+    <param name="saturation/max" value="250" />
+    <param name="saturation/min" value="100" />
+    <param name="value/max" value="200" />
+    <param name="value/min" value="50" />
+    <param name="area_size/min" value="50" />
+    <param name="area_size/max" value="20000" />
+    <remap from="image_topic" to="/usb_cam/image" />
+    <remap from="image_topic_2" to="/img_filter_out" />
+  </node>
+</launch>
+

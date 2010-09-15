@@ -1,0 +1,15 @@
+<package>
+  <description brief="lv1_arm">
+
+     lv1_arm
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/lv1_arm</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+</package>
+
+
