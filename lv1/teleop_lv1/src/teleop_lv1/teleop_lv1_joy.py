@@ -18,10 +18,10 @@ class Lv1Joy(Joy2Str):
         self._set_params('~button1', '~motion1', 4, 'reset')
         self._set_params('~button2', '~motion2', 5, 'dabadaba')
         self._set_params('~button3', '~motion3', 6, 'baibai')
-        self._set_params('~button4', '~motion4', 7, 'matakitene')
-        self._set_params('~button5', '~motion5', 12, 'gomennnasai')
-        self._set_params('~button6', '~motion6', 13, 'ochawaikagadesuka')
-        self._set_params('~button7', '~motion7', 14, 'nodowakawakimasenka')
+        self._set_params('~button4', '~motion4', 7, 'hoge')
+        self._set_params('~button5', '~motion5', 12, 'sosogi1')
+        self._set_params('~button6', '~motion6', 13, 'sosogi3')
+        self._set_params('~button7', '~motion7', 14, 'sosogi2')
         self._set_params('~button8', '~motion8', 15, 'yukkurishiteittene')
 
 if __name__ == '__main__':    

@@ -10,7 +10,8 @@
   <url>http://ros.org/wiki/lv1_main</url>
   <depend package="rospy"/>
   <depend package="std_msgs"/>
-  <depend package="lv1_msgs"/>
+  <depend package="joy"/>
+  <depend package="geometry_msgs"/>
 
 </package>
 

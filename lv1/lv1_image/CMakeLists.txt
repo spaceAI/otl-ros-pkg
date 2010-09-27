@@ -29,5 +29,15 @@ rosbuild_gensrv()
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
+
+
+find_package(wxWidgets REQUIRED)
+include(${wxWidgets_USE_FILE})
+include_directories( ${wxWidgets_INCLUDE_DIRS} )
+include_directories(src)
+rosbuild_add_executable(hsv_panel src/hsv_panel.cpp)
+target_link_libraries(hsv_panel ${wxWidgets_LIBRARIES})
+
 include_directories(include/lv1_image)
-rosbuild_add_executable(img_filter src/img_filter.cpp src/Blob.cpp src/BlobResult.cpp src/BlobExtraction.cpp)
+rosbuild_add_executable(img_filter_lv1 src/img_filter_lv1.cpp src/Blob.cpp src/BlobResult.cpp src/BlobExtraction.cpp)
+
