@@ -30,8 +30,8 @@ bool Lv1Interface::Open(const std::string &devName)
     std::cout << "opened " << devName << std::endl;
 
     setInitialAngles();
-    getJointAngles(ang);
-    setJointAnglesInternal(ang);
+    //getJointAngles(ang);
+//    setJointAnglesInternal(ang);
 
     return true;
 }
@@ -301,13 +301,14 @@ double open2[LV1_DOF] = {90, -75, 100, 0, 0};
 double phold[LV1_DOF] = {90, 0, 100, 0, 0};
 double hold[LV1_DOF] = {95, 0, 0, 0, 0};
 double up[LV1_DOF] = {90, -30, -20, 0, 0};
-double forward[LV1_DOF] = {-75, 0, 0, 30, 0};
-double sosogi[LV1_DOF] = {-75, -90, 0, 30, 0};
-double modosu[LV1_DOF] = {-70, 0, 0, 35, 0};
-double serve[LV1_DOF] = {-50, 0, 0, -40, 0};
+double forward[LV1_DOF] = {-70, 0, 0, 32, 0};
+double sosogi[LV1_DOF] = {-70, -90, 0, 32, 0};
+double modosu[LV1_DOF] = {-75, 0, 0, 32, 0};
+double serve[LV1_DOF] = {-50, 0, 0, 32, 0};
 
-double phold_back[LV1_DOF] = {85, 0, 100, 0, 0};
-double hold_back[LV1_DOF] = {90, 0, 0, 0, 0};
+double kamae_back[LV1_DOF] = {-50, 0, 0, 32, 0};
+double phold_back[LV1_DOF] = {93, 0, 100, 32, 0};
+double hold_back[LV1_DOF] = {93, 0, 0, 32, 0};
 #if 0
 double migi[LV1_DOF] = {-80, 0, 0, -30, 0};
 double hidari[LV1_DOF] = {-30, 0, 0, 30, 0};
@@ -355,7 +356,7 @@ void SetJointAnglesWithoutTray(Lv1Interface &lv, double *pose, double time)
 
 void Sosogi(Lv1Interface &lv, int tray)
 {
-    SetJointAnglesWithTray(lv, kamae, 3.0, tray);
+    SetJointAnglesWithTray(lv, kamae_back, 3.0, tray);
     
     SetJointAnglesWithTray(lv, open2, 3.0, tray);
     SetJointAnglesWithTray(lv, phold, 1.0, tray);
@@ -364,7 +365,7 @@ void Sosogi(Lv1Interface &lv, int tray)
     SetJointAnglesWithTray(lv, up, 1.0, tray);
     SetJointAnglesWithTray(lv, forward, 3.0, tray);
     SetJointAnglesWithTray(lv, sosogi, 2.0, tray);
-    sleep(2);
+    sleep(4);
     SetJointAnglesWithTray(lv, modosu, 1.0, tray);
     sleep(1);
     SetJointAnglesWithTray(lv, serve, 3.0, tray);

@@ -28,7 +28,10 @@ Lv1Node::Lv1Node():
 
 void Lv1Node::Ini()
 {
-    if (lv1_.Open("/dev/ttyUSB0"))
+    ros::NodeHandle node("~");
+    std::string device_path;
+    node.param<std::string>("device", device_path, "/dev/ttyUSB1");
+    if (lv1_.Open(device_path))
     {
         tray_sub_ = node_.subscribe("motion", 100, &Lv1Node::Motion, this);
     }
@@ -41,15 +44,15 @@ void Lv1Node::Ini()
 
 void Lv1Node::Motion(const std_msgs::String::ConstPtr &motion)
 {
-    if (motion->data == "sosogi0")
+    if (motion->data == "sosogi1")
     {
         PlaySosogi(0);
     }
-    else if (motion->data == "sosogi1")
+    else if (motion->data == "sosogi2")
     {
         PlaySosogi(1);
     }
-    else if (motion->data == "sosogi2")
+    else if (motion->data == "sosogi3")
     {
         PlaySosogi(2);
     }
