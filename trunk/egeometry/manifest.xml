@@ -1,0 +1,17 @@
+<package>
+  <description brief="Geometry Library similar to EusLisp coordinates">
+
+    egeometry is a Geometry Library similar to EusLisp coordinates.
+    This library is useful for EusLisp users.
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/egeometry</url>
+  <depend package="roscpp"/>
+  <!-- for test -->
+  <depend package="gtest"/>
+</package>
+
+
