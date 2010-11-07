@@ -122,6 +122,7 @@ TEST(NormalTest, World)
     c1.GetWorldRotation(rot1);
     EXPECT_TRUE(pos1 == c1.GetPosition());
     EXPECT_TRUE(rot1 == c1.GetRotation());
+    EXPECT_TRUE(pos1 == c1.GetWorldPosition());
     // GetWorldCoords
     EXPECT_TRUE(c1.GetWorldCoords() == c1);
     Coordinates wc;
@@ -140,7 +141,7 @@ TEST(NormalTest, Move)
 {
     // rotate local
     Coordinates c1(FloatVector(100, 200, 100));
-    c1.RotateWithAxis(DegToRad(30), FloatVector(0, 1, 0));
+    c1.Rotate(DegToRad(30), FloatVector(0, 1, 0));
     EXPECT_TRUE(c1.GetPosition() == FloatVector(100, 200, 100));
 
     expect_near_matrix(c1.GetRotation(), FloatMatrix(0.866026, 0.0, 0.5,
@@ -149,15 +150,15 @@ TEST(NormalTest, Move)
 
     // rotate world
     Coordinates c1w(FloatVector(100, 200, 100));
-    c1w.RotateWithAxis(DegToRad(-30), FloatVector(-1, 0, 1));
-    c1w.RotateWithAxis(DegToRad(-30), FloatVector(0, 1, 1), kWorld);
+    c1w.Rotate(DegToRad(-30), FloatVector(-1, 0, 1));
+    c1w.Rotate(DegToRad(-30), FloatVector(0, 1, 1), kWorld);
     expect_near_matrix(c1w.GetRotation(), FloatMatrix(0.706697, 0.487372, -0.512882,
                                                       -0.664227, 0.706697, -0.243686,
                                                       0.243686, 0.512882, 0.823146));
     
     // orient local
     Coordinates co1(FloatVector(100, 200, 100));
-    co1.OrientWithAxis(DegToRad(30), FloatVector(0, 1, 0));
+    co1.Orient(DegToRad(30), FloatVector(0, 1, 0));
     EXPECT_TRUE(co1.GetPosition() == FloatVector(100, 200, 100));
     expect_near_matrix(co1.GetRotation(), FloatMatrix(0.866026, 0.0, 0.5,
                                                       0.0, 1.0, 0.0,
@@ -165,7 +166,7 @@ TEST(NormalTest, Move)
 
 
     // orient world
-    co1.OrientWithAxis(DegToRad(30), FloatVector(0, 1, 0), kWorld);
+    co1.Orient(DegToRad(30), FloatVector(0, 1, 0), kWorld);
     EXPECT_TRUE(co1.GetPosition() == FloatVector(100, 200, 100));
     expect_near_matrix(co1.GetRotation(), FloatMatrix(0.866026, 0.0, 0.5,
                                                       0.0, 1.0, 0.0,
@@ -173,7 +174,7 @@ TEST(NormalTest, Move)
 
     // translate local
     Coordinates ct1(FloatVector(100, 200, 100));
-    ct1.RotateWithAxis(DegToRad(40), FloatVector(0, 1, 0));
+    ct1.Rotate(DegToRad(40), FloatVector(0, 1, 0));
     ct1.Translate(FloatVector(100, 50, -20));
     expect_near_vector(ct1.GetPosition(), FloatVector(163.749, 250, 20.4004));
     ct1.Translate(FloatVector(100, 50, -20));
@@ -181,7 +182,7 @@ TEST(NormalTest, Move)
 
     // translate world
     Coordinates ct2(FloatVector(100, 200, 100));
-    ct2.RotateWithAxis(DegToRad(40), FloatVector(0, 1, 0));
+    ct2.Rotate(DegToRad(40), FloatVector(0, 1, 0));
     ct2.Translate(FloatVector(100, 50, -20), kWorld);
     expect_near_vector(ct2.GetPosition(), FloatVector(200, 250, 80));
     ct2.Translate(FloatVector(100, 50, -20), kWorld);
@@ -189,7 +190,7 @@ TEST(NormalTest, Move)
     
     // locate local
     Coordinates cl1(FloatVector(100, 200, 100));
-    cl1.RotateWithAxis(DegToRad(40), FloatVector(0, 1, 0));
+    cl1.Rotate(DegToRad(40), FloatVector(0, 1, 0));
     cl1.Locate(FloatVector(100, 50, -20));
     expect_near_vector(cl1.GetPosition(), FloatVector(163.749, 250, 20.4004));
     cl1.Locate(FloatVector(100, 50, -20));
@@ -197,7 +198,7 @@ TEST(NormalTest, Move)
     
     // locate world
     Coordinates cl2(FloatVector(100, 200, 100));
-    cl2.RotateWithAxis(DegToRad(40), FloatVector(0, 1, 0));
+    cl2.Rotate(DegToRad(40), FloatVector(0, 1, 0));
     cl2.Locate(FloatVector(100, 50, -20), kWorld);
     expect_near_vector(cl2.GetPosition(), FloatVector(100, 50, -20));
     cl2.Locate(FloatVector(100, 50, -20), kWorld);
@@ -208,20 +209,20 @@ TEST(NormalTest, Move)
     c1.GetTransformVector(FloatVector(100, 60, -80), v1);
     expect_near_vector(v1, FloatVector(146.603, 260.0, -19.282));
 
-    c1.RotateWithAxis(DegToRad(-30), FloatVector(0, 1, -1));
+    c1.Rotate(DegToRad(-30), FloatVector(0, 1, -1));
     c1.GetTransformVector(FloatVector(-80, -10, 30), v1);
     expect_near_vector(v1, FloatVector(34.0643, 160.376, 138.502));
 
     // inverse transform vector
     Coordinates c2(FloatVector(-50.0, 10.0, 0.0));
-    c2.RotateWithAxis(DegToRad(30), FloatVector(-1, 0, 1));
+    c2.Rotate(DegToRad(30), FloatVector(-1, 0, 1));
     FloatVector v2;
     c2.GetInverseTransformVector(FloatVector(100, -500, 30), v2);
     expect_near_vector(FloatVector(-42.3698, -505.313, -162.37), v2);
     
     // GetParentVector
     Coordinates cp1(FloatVector(100, 200, 100));
-    cp1.RotateWithAxis(DegToRad(270), FloatVector(0, 1, -1));
+    cp1.Rotate(DegToRad(270), FloatVector(0, 1, -1));
     FloatVector vr1;
     // local
     cp1.GetParentVector(FloatVector(100, -50, 10), vr1, kLocal);
@@ -246,9 +247,9 @@ TEST(NormalTest, Move)
 
     // get rpy
     Coordinates rpy2;
-    rpy2.RotateWithAxis(DegToRad(30), FloatVector(1, 0, 0));
-    rpy2.RotateWithAxis(DegToRad(-90), FloatVector(0, 1, 0));
-    rpy2.RotateWithAxis(DegToRad(1), FloatVector(0, 1, 1));
+    rpy2.Rotate(DegToRad(30), FloatVector(1, 0, 0));
+    rpy2.Rotate(DegToRad(-90), FloatVector(0, 1, 0));
+    rpy2.Rotate(DegToRad(1), FloatVector(0, 1, 1));
     double r, p, y;
     rpy2.GetRPY(r, p, y);
     EXPECT_NEAR(r, -1.5458, 0.001);

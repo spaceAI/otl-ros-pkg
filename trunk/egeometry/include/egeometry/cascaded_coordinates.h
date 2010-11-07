@@ -1,5 +1,5 @@
-#ifndef EUSGEOMETRY_CASCADED_COORDINATES_H
-#define EUSGEOMETRY_CASCADED_COORDINATES_H
+#ifndef EGEOMETRY_CASCADED_COORDINATES_H
+#define EGEOMETRY_CASCADED_COORDINATES_H
 
 #include <egeometry/coordinates.h>
 #include <boost/shared_ptr.hpp>
@@ -10,12 +10,19 @@ namespace egeometry
 
 class CascadedCoordinates;
 
+typedef CascadedCoordinates CasCoords;
+typedef CascadedCoordinates* CasCoordsPtr;
+//typedef boost::shared_ptr<CascadedCoordinates> CasCoordsPtr;
+typedef std::vector<CasCoordsPtr> CasCoordsPtrVector;
 
+/// @brief 連結座標系
 class CascadedCoordinates : public Coordinates
 {
 public:
     CascadedCoordinates();
     explicit CascadedCoordinates(const std::string &name);
+    /// 名前で初期化するコンストラクタ
+    explicit CascadedCoordinates(const char * const name);
     explicit CascadedCoordinates(const FloatVector &pos);
     explicit CascadedCoordinates(const float * const pos);
     explicit CascadedCoordinates(const double * const pos);
@@ -27,9 +34,12 @@ public:
     bool operator!= (const CascadedCoordinates &coords);
 
     ~CascadedCoordinates();
-    const std::vector<CascadedCoordinates *> &GetDescendants() const;
+    const CasCoordsPtrVector &GetDescendants() const;
+    // assoc a coordinates
     void Assoc(CascadedCoordinates &child);
+    // release a child
     void Dissoc(CascadedCoordinates &child);
+    /// release all descendants
     void ClearAssoc();
     void Obey(CascadedCoordinates &mother);
     void Disobey(CascadedCoordinates &mother);
@@ -57,15 +67,13 @@ public:
 
     bool HasParent() const;
 private:
-    CascadedCoordinates* parent_; // shared_ptrのやり方が分からないので暫定
-    std::vector<CascadedCoordinates *> descendants_; // shared_ptrのやり方が分からないので暫定
+    CasCoordsPtr parent_;
+    std::vector<CasCoordsPtr> descendants_;
     mutable Coordinates worldcoords_;
-    // manager
     mutable bool changed_;
 };
 
-typedef boost::shared_ptr<CascadedCoordinates> CasCoordsPtr;
 
 }
 
-#endif //CASCADED_COORDINATES_H
+#endif //EGEOMETRY_CASCADED_COORDINATES_H

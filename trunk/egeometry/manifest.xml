@@ -10,8 +10,10 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/egeometry</url>
   <depend package="roscpp"/>
-  <!-- for test -->
-  <depend package="gtest"/>
+  <depend package="tf"/>
+  <depend package="geometry_msgs"/>
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib" />
+  </export>
+
 </package>
-
-

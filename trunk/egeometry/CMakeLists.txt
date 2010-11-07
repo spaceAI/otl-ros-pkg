@@ -12,7 +12,7 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 rosbuild_init()
 
 #set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
@@ -28,18 +28,25 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
-include_directories(src)
-rosbuild_add_executable(../test/test_coordinates test/test_coordinates.cpp src/coordinates.cpp)
-rosbuild_add_gtest_build_flags(../test/test_coordinates)
 
+rosbuild_add_library(${PROJECT_NAME} src/coordinates.cpp src/cascaded_coordinates.cpp)
 
-rosbuild_add_executable(../test/test_matrix test/test_matrix.cpp)
-rosbuild_add_gtest_build_flags(../test/test_matrix)
+rosbuild_add_gtest(test/test_matrix test/test_matrix.cpp)
+rosbuild_add_gtest(test/test_vector test/test_vector.cpp)
 
-rosbuild_add_executable(../test/test_vector test/test_vector.cpp)
-rosbuild_add_gtest_build_flags(../test/test_vector)
+rosbuild_add_gtest(test/test_coordinates test/test_coordinates.cpp)
+#add_dependencies(test/test_coordinates ${PROJECT_NAME})
+target_link_libraries(test/test_coordinates ${PROJECT_NAME})
 
-rosbuild_add_executable(../test/viewer src/coordinates.cpp src/cascaded_coordinates.cpp test/viewer.cpp)
-target_link_libraries(../test/viewer glut)
+rosbuild_add_gtest(test/test_msg test/test_msg.cpp)
+target_link_libraries(test/test_msg ${PROJECT_NAME})
 
+rosbuild_add_gtest(test/test_cascoords test/test_cascoords.cpp)
+target_link_libraries(test/test_cascoords ${PROJECT_NAME})
 
+rosbuild_add_executable(test/viewer test/viewer.cpp)
+target_link_libraries(test/viewer glut ${PROJECT_NAME})
+
+rosbuild_add_executable(test/test_publish test/test_publish.cpp)
+add_dependencies(test/test_publish ${PROJECT_NAME})
+target_link_libraries(test/test_publish ${PROJECT_NAME})
