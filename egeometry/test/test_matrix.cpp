@@ -7,7 +7,7 @@ using namespace egeometry;
 
 TEST(NormalTest, MemberFunction)
 {
-    Matrix33 aa;
+    FloatMatrix aa;
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
@@ -16,7 +16,7 @@ TEST(NormalTest, MemberFunction)
         }
     }
     
-    Matrix33 bb(0,1,2,
+    FloatMatrix bb(0,1,2,
                 3,4,5,
                 6,7,8);
     for (int i = 0; i < 3; i++)
@@ -28,25 +28,25 @@ TEST(NormalTest, MemberFunction)
         }
     }
 
-    Matrix33 cc(bb);
-    Matrix33 dd;
+    FloatMatrix cc(bb);
+    FloatMatrix dd;
     // operator=
     dd = cc;
     // operator==
     EXPECT_TRUE(bb == cc);
     EXPECT_TRUE(dd == cc);
     // GetColumn
-    Vector3 v0(dd.GetColumn(0));
+    FloatVector v0(dd.GetColumn(0));
     EXPECT_FLOAT_EQ(0, v0[0]);
     EXPECT_FLOAT_EQ(3, v0[1]);
     EXPECT_FLOAT_EQ(6, v0[2]);
 
-    Vector3 v1(dd.GetColumn(1));
+    FloatVector v1(dd.GetColumn(1));
     EXPECT_FLOAT_EQ(1, v1[0]);
     EXPECT_FLOAT_EQ(4, v1[1]);
     EXPECT_FLOAT_EQ(7, v1[2]);
 
-    Vector3 v2(dd.GetColumn(2));
+    FloatVector v2(dd.GetColumn(2));
     EXPECT_FLOAT_EQ(2, v2[0]);
     EXPECT_FLOAT_EQ(5, v2[1]);
     EXPECT_FLOAT_EQ(8, v2[2]);
@@ -76,43 +76,43 @@ TEST(NormalTest, MemberFunction)
     EXPECT_FALSE(v2 == dd.GetRow(2));
 
     // operator[]
-    Vector3 &r0 = dd[0];
+    FloatVector &r0 = dd[0];
     EXPECT_FLOAT_EQ(0.0 , r0[0]);
     EXPECT_FLOAT_EQ(1.0 , r0[1]);
     EXPECT_FLOAT_EQ(2.0 , r0[2]);
 
-    Vector3 &r1 = dd[1];
+    FloatVector &r1 = dd[1];
     EXPECT_FLOAT_EQ(3.0 , r1[0]);
     EXPECT_FLOAT_EQ(4.0 , r1[1]);
     EXPECT_FLOAT_EQ(5.0 , r1[2]);
 
-    Vector3 &r2 = dd[2];
+    FloatVector &r2 = dd[2];
     EXPECT_FLOAT_EQ(6.0 , r2[0]);
     EXPECT_FLOAT_EQ(7.0 , r2[1]);
     EXPECT_FLOAT_EQ(8.0 , r2[2]);
 
-    const Matrix33 cm = dd;
+    const FloatMatrix cm = dd;
 
-    const Vector3 &cr0 = cm[0];
+    const FloatVector &cr0 = cm[0];
     EXPECT_FLOAT_EQ(0.0 , cr0[0]);
     EXPECT_FLOAT_EQ(1.0 , cr0[1]);
     EXPECT_FLOAT_EQ(2.0 , cr0[2]);
 
-    const Vector3 &cr1 = cm[1];
+    const FloatVector &cr1 = cm[1];
     EXPECT_FLOAT_EQ(3.0 , cr1[0]);
     EXPECT_FLOAT_EQ(4.0 , cr1[1]);
     EXPECT_FLOAT_EQ(5.0 , cr1[2]);
 
-    const Vector3 &cr2 = cm[2];
+    const FloatVector &cr2 = cm[2];
     EXPECT_FLOAT_EQ(6.0 , cr2[0]);
     EXPECT_FLOAT_EQ(7.0 , cr2[1]);
     EXPECT_FLOAT_EQ(8.0 , cr2[2]);
 
     // operator*= & tdotx,y,z
-    Matrix33 m1(0.984808, -0.17101, -0.030154,
+    FloatMatrix m1(0.984808, -0.17101, -0.030154,
               0.173648, 0.969846, 0.17101,
               0.0, -0.173648, 0.984808);
-    Matrix33 m2(0.866026, 0.0, 0.5,
+    FloatMatrix m2(0.866026, 0.0, 0.5,
                 0.25, 0.866026, -0.433013,
                 -0.433013, 0.5, 0.75);
     m1 *= m2;
@@ -127,7 +127,7 @@ TEST(NormalTest, MemberFunction)
     EXPECT_NEAR(0.813798, m1[2][2], 0.0001);
 
     // inverse
-    Matrix33 mi = m1.Inverse();
+    FloatMatrix mi = m1.Inverse();
     EXPECT_NEAR(0.823174, mi[0][0], 0.0001);
     EXPECT_NEAR(-0.163176, mi[1][0], 0.0001);
     EXPECT_NEAR(0.543838, mi[2][0], 0.0001);
@@ -139,7 +139,7 @@ TEST(NormalTest, MemberFunction)
     EXPECT_NEAR(0.813798, mi[2][2], 0.0001);
     
     // Transpose
-    Matrix33 mt = m1.Transpose();
+    FloatMatrix mt = m1.Transpose();
     EXPECT_NEAR(0.823174, mt[0][0], 0.0001);
     EXPECT_NEAR(-0.163176, mt[1][0], 0.0001);
     EXPECT_NEAR(0.543838, mt[2][0], 0.0001);
@@ -151,7 +151,7 @@ TEST(NormalTest, MemberFunction)
     EXPECT_NEAR(0.813798, mt[2][2], 0.0001);
 
     // identity
-    Matrix33 im = Matrix33::GetIdentity();
+    FloatMatrix im = FloatMatrix::GetIdentity();
     for (int i = 0; i<3; i++)
     {
         for (int j = 0; j<3; j++)
@@ -179,13 +179,13 @@ TEST(NormalTest, MemberFunction)
 
 TEST(NormalTest, NonMemberFunction)
 {
-    Matrix33 m1(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0);
-    Matrix33 m2(-0.1, 0.2, 0.3, -0.4, 0.5, -0.6, 0.1, 0.2, 0.1);
-    Vector3 v1(100, 0.5, -5.0);
+    FloatMatrix m1(0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0);
+    FloatMatrix m2(-0.1, 0.2, 0.3, -0.4, 0.5, -0.6, 0.1, 0.2, 0.1);
+    FloatVector v1(100, 0.5, -5.0);
     // operator*
-    EXPECT_TRUE(m1 * v1 == Vector3(-9.5, 277.0, 563.5));
-    EXPECT_TRUE(v1 * m1 == Vector3(-28.5, 67.0, 162.5));
-    Matrix33 m1m2(m1 * m2);
+    EXPECT_TRUE(m1 * v1 == FloatVector(-9.5, 277.0, 563.5));
+    EXPECT_TRUE(v1 * m1 == FloatVector(-28.5, 67.0, 162.5));
+    FloatMatrix m1m2(m1 * m2);
     EXPECT_NEAR(-0.2, m1m2[0][0], 0.000001);
     EXPECT_NEAR( 0.9, m1m2[0][1], 0.000001);
     EXPECT_NEAR(-0.4, m1m2[0][2], 0.000001);
@@ -196,7 +196,7 @@ TEST(NormalTest, NonMemberFunction)
     EXPECT_NEAR(6.3, m1m2[2][1], 0.000001);
     EXPECT_NEAR(-1.6, m1m2[2][2], 0.000001);
 
-    Matrix33 m2m1(m2 * m1);
+    FloatMatrix m2m1(m2 * m1);
     EXPECT_NEAR(2.4, m2m1[0][0], 0.000001);
     EXPECT_NEAR(2.8, m2m1[0][1], 0.000001);
     EXPECT_NEAR(3.2, m2m1[0][2], 0.000001);

@@ -25,6 +25,20 @@ typedef boost::shared_ptr<Coordinates> CoordsPtr;
 std::vector<CoordsPtr> objects;
 }
 
+void
+gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar)
+{
+   GLdouble xmin, xmax, ymin, ymax;
+
+   ymax = zNear * tan(fovy * M_PI / 360.0);
+   ymin = -ymax;
+   xmin = ymin * aspect;
+   xmax = ymax * aspect;
+
+
+   glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+}
+
 void DrawObjects(std::vector<CoordsPtr> &objects);
 void DrawBox(const Coordinates &c, const float* const sides, const float* const color);
 
@@ -355,14 +369,14 @@ void KeyboardHandler(unsigned char key, int x, int y)
         axis[0] = 1;
         axis[1] = 0;
         axis[2] = 0;
-        (*objects.begin())->RotateWithAxis(DEG2RAD(10), axis);
+        (*objects.begin())->Rotate(DEG2RAD(10), axis);
         //std::cout << **objects.begin() << std::endl;
         break;
     case 't':
         axis[0] = 1;
         axis[1] = 0;
         axis[2] = 0;
-        (*objects.begin())->RotateWithAxis(DEG2RAD(-10), axis);
+        (*objects.begin())->Rotate(DEG2RAD(-10), axis);
         //std::cout << **objects.begin() << std::endl;
         break;
     case 'f':
@@ -488,16 +502,18 @@ void SetObjects()
     CascadedCoordinates *c1 = new CascadedCoordinates(pos);
     //Coordinates *c1 = new Coordinates(pos);
     CoordsPtr p_c1(c1);
+    c1->SetName("c1");
     objects.push_back(p_c1);
     
     FloatVector pos2(0, 0, 2.5);
     CascadedCoordinates *c2 = new CascadedCoordinates(pos2);
+    c2->SetName("c2");
     //Coordinates *c2 = new Coordinates(pos2);
     CoordsPtr p_c2(c2);
     
     FloatVector axis(1, 0, 0);
     
-    c2->RotateWithAxis(DEG2RAD(30), axis);
+    c2->Rotate(DEG2RAD(30), axis);
     c1->Assoc(*c2);
     objects.push_back(p_c2);
 }

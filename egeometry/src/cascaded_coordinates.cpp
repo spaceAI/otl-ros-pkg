@@ -22,6 +22,15 @@ CascadedCoordinates::CascadedCoordinates(const std::string &name):
 {
 }
 
+CascadedCoordinates::CascadedCoordinates(const char * const name):
+    Coordinates(name),
+    parent_(NULL),
+    descendants_(),
+    worldcoords_(),
+    changed_(true)
+{
+}
+
 CascadedCoordinates::CascadedCoordinates(const FloatVector &pos):
     Coordinates(pos),
     parent_(NULL),
@@ -31,14 +40,6 @@ CascadedCoordinates::CascadedCoordinates(const FloatVector &pos):
 {
 }
 
-CascadedCoordinates::CascadedCoordinates(const float * const pos):
-    Coordinates(pos),
-    parent_(NULL),
-    descendants_(),
-    worldcoords_(),
-    changed_(true)
-{
-}
 
 CascadedCoordinates::CascadedCoordinates(const double * const pos):
     Coordinates(pos),
@@ -114,7 +115,7 @@ void CascadedCoordinates::GetParent(CascadedCoordinates &coords) const
 }
 
 
-const std::vector<CascadedCoordinates *> &CascadedCoordinates::GetDescendants() const
+const CasCoordsPtrVector &CascadedCoordinates::GetDescendants() const
 {
     return descendants_;
 }
@@ -136,7 +137,7 @@ void CascadedCoordinates::Assoc(CascadedCoordinates &child)
 
 void CascadedCoordinates::Dissoc(CascadedCoordinates &child)
 {
-    std::vector<CascadedCoordinates *>::iterator it;
+    CasCoordsPtrVector::iterator it;
     it = find(descendants_.begin(), descendants_.end(), &child);
     if (it != descendants_.end()) // found
     {
@@ -151,13 +152,17 @@ void CascadedCoordinates::Dissoc(CascadedCoordinates &child)
 
 void CascadedCoordinates::ClearAssoc()
 {
-    std::vector<CascadedCoordinates *>::iterator it;
+    CasCoordsPtrVector::iterator it;
     for (it  = descendants_.begin();
          it != descendants_.end();
          ++it)
     {
-        Dissoc(**it);
+        CascadedCoordinates c;
+        (*it)->GetWorldCoords(c);
+        (*it)->Disobey(*this);
+        (*it)->SetCoords(c);
     }
+    descendants_.clear();
 }
 
 void CascadedCoordinates::Obey(CascadedCoordinates &mother)
@@ -204,7 +209,7 @@ void CascadedCoordinates::Changed()
     if (!changed_)
     {
         changed_ = true;
-        std::vector<CascadedCoordinates *>::iterator it;
+        CasCoordsPtrVector::iterator it;
         for (it  = descendants_.begin();
              it != descendants_.end();
              ++it)

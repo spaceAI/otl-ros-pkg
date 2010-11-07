@@ -17,17 +17,17 @@ namespace egeometry
 const Coordinates Coordinates::world_coords("world_coords");
 
 Coordinates::Coordinates():
-    rot_(Matrix33::GetIdentity()), pos_(), name_("")
+    rot_(FloatMatrix::GetIdentity()), pos_(), name_("")
 {
 }
   
 Coordinates::Coordinates(const double* const pos):
-    rot_(Matrix33::GetIdentity()), pos_(pos), name_("")
+    rot_(FloatMatrix::GetIdentity()), pos_(pos), name_("")
 {
 }
 
 Coordinates::Coordinates(const FloatVector &pos):
-    rot_(Matrix33::GetIdentity()), pos_(pos), name_("")
+    rot_(FloatMatrix::GetIdentity()), pos_(pos), name_("")
 {
 }
 
@@ -48,12 +48,12 @@ Coordinates::Coordinates(const FloatMatrix &rot):
 }
 
 Coordinates::Coordinates(const std::string &name):
-    rot_(Matrix33::GetIdentity()), pos_(), name_(name)
+    rot_(FloatMatrix::GetIdentity()), pos_(), name_(name)
 {
 }
 
 Coordinates::Coordinates(const char * const name):
-    rot_(Matrix33::GetIdentity()), pos_(), name_(name)
+    rot_(FloatMatrix::GetIdentity()), pos_(), name_(name)
 {
 }
 
@@ -201,7 +201,7 @@ void Coordinates::GetInverseTransformation(Coordinates &coords) const
 {
     coords.SetRotation(rot_.Transpose());
     coords.SetPosition(coords.GetRotation() * pos_);
-    coords.SetPosition(-1 * coords.GetPosition());
+    coords.SetPosition(-1.0 * coords.GetPosition());
 }
 
 /*  
@@ -310,16 +310,6 @@ void Coordinates::ResetCoords()
     Changed();
 }
 
-#if 0
-void GetInverseMatrix(const FloatMatrix &mat, FloatMatrix &ret)
-{
-    ret = identity_matrix<float>(ret.size1());
-    FloatMatrix copy_lh(mat);
-    permutation_matrix<> pm(mat.size1());
-    //lu_factorize(mat, pm);
-    //lu_substitute(mat, pm, ret);
-}
-#endif
 
 const Coordinates &Coordinates::GetParent() const
 {
@@ -337,7 +327,7 @@ void Coordinates::GetInverseTransformVector(const FloatVector &pos, FloatVector 
     result_pos = inv_rot * pos - inv_rot * pos_;
 }
 
-void Coordinates::RotateWithAxis(const double theta, const FloatVector &axis, const WorldOrLocal local)
+void Coordinates::Rotate(const double theta, const FloatVector &axis, const WorldOrLocal local)
 {
     FloatMatrix rotation_mat;
     SetRotationMatrixWithAxis(theta, axis, rotation_mat);
@@ -354,7 +344,7 @@ void Coordinates::RotateWithAxis(const double theta, const FloatVector &axis, co
     SetCoords(rot_, pos_);
 }
 
-void Coordinates::OrientWithAxis(const double theta, const FloatVector &axis, const WorldOrLocal local)
+void Coordinates::Orient(const double theta, const FloatVector &axis, const WorldOrLocal local)
 {
     FloatMatrix rotation_mat;
     SetRotationMatrixWithAxis(theta, axis, rotation_mat);
@@ -367,29 +357,6 @@ void Coordinates::OrientWithAxis(const double theta, const FloatVector &axis, co
         rot_ = rotation_mat;
     }
     SetCoords(rot_, pos_);
-}
-
-// only for internal use  
-void SetRotationMatrixWithAxis(const double theta, const FloatVector axis, FloatMatrix &mat)
-{
-    Vector3 normalized_axis(axis);
-    normalized_axis.Normalize();
-    
-    double ct1 = 1-cos(theta);
-    double ct = cos(theta);
-    double st = sin(theta);
-
-    mat[0][0] = normalized_axis[0] * normalized_axis[0] * ct1 + ct;
-    mat[0][1] = normalized_axis[0] * normalized_axis[1] * ct1 - normalized_axis[2] * st;
-    mat[0][2] = normalized_axis[2] * normalized_axis[0] * ct1 + normalized_axis[1] * st;
-    
-    mat[1][0] = normalized_axis[0] * normalized_axis[1] * ct1 + normalized_axis[2] * st;
-    mat[1][1] = normalized_axis[1] * normalized_axis[1] * ct1 + ct;
-    mat[1][2] = normalized_axis[1] * normalized_axis[2] * ct1 - normalized_axis[0] * st;
-    
-    mat[2][0] = normalized_axis[2] * normalized_axis[0] * ct1 - normalized_axis[1] * st;
-    mat[2][1] = normalized_axis[1] * normalized_axis[2] * ct1 + normalized_axis[0] * st;
-    mat[2][2] = normalized_axis[2] * normalized_axis[2] * ct1 + ct;
 }
 
 
@@ -433,69 +400,20 @@ void Coordinates::Locate (const FloatVector &vector, const WorldOrLocal local)
 
 void Coordinates::GetRPY(double &r, double &p, double &y, const bool result1) const
 {
-    double a, b, c, sa, ca;
-
-    a = atan2(rot_[1][0],rot_[0][0]);
-    sa = sin(a); ca = cos(a);
-    b = atan2(-rot_[2][0], ca*rot_[0][0] + sa*rot_[1][0]);
-    c = atan2(sa*rot_[0][2] - ca*rot_[1][2], -sa*rot_[0][1] + ca*rot_[1][1]);
-    if (result1)
-    {
-        r = a;
-        p = b;
-        y = c;
-    }
-    else
-    {
-        a=a + M_PI;
-        sa = sin(a); ca = cos(a);
-        b = atan2(-rot_[2][0], ca*rot_[0][0] + sa*rot_[1][0]);
-        c = atan2(sa*rot_[0][2] - ca*rot_[1][2], -sa*rot_[0][1] + ca*rot_[1][1]);
-        
-        r = a;
-        p = b;
-        y = c;
-    }
+    GetRPYAngles(rot_, r, p, y, result1);
 }
 
 
 void Coordinates::SetRPY(const double r, const double p, const double y)
 {
-    double cr = cos(r);
-    double sr = sin(r);
-    double cp = cos(p);
-    double sp = sin(p);
-    double cy = cos(y);
-    double sy = sin(y);
-    rot_[0][0] = cr * cp;
-    rot_[0][1] = cr * sp * sy - sr * cy;
-    rot_[0][2] = cr * sp * cy + sr * sy;
-    rot_[1][0] = sr * cp;
-    rot_[1][1] = sr * sp * sy + cr * cy;
-    rot_[1][2] = sr * sp * cy - cr * sy;
-    rot_[2][0] = -sp;
-    rot_[2][1] = cp * sy;
-    rot_[2][2] = cp * cy;
+    SetRPYAngles(rot_, r, p, y);
     Changed();
 }
 
 // q[4] = {x, y, z, w}
 void Coordinates::SetQuaternion(const double* const q)
 {
-    if (q == NULL)
-    {
-        return;
-    }
-    rot_[0][0] = 1.0 - 2.0 * (q[1] * q[1] + q[2] * q[2]);
-    rot_[0][1] = 2.0 * (q[0] * q[1] + q[3] * q[2]);
-    rot_[0][2] = 2.0 * (q[0] * q[2] - q[3] * q[1]);
-    rot_[1][0] = 2.0 * (q[0] * q[1] - q[3] * q[2]);
-    rot_[1][1] = 1.0 - 2.0 * (q[0] * q[0] + q[2] * q[2]);
-    rot_[1][2] = 2.0 * (q[1] * q[2] + q[3] * q[0]);
-    rot_[2][0] = 2.0 * (q[0] * q[2] + q[3] * q[1]);
-    rot_[2][1] = 2.0 * (q[1] * q[2] - q[3] * q[0]);
-    rot_[2][2] = 1.0 - 2.0 * (q[0] * q[0] + q[1] * q[1]);
-
+    rot_.SetQuaternion(q);
     Changed();
 }
 
@@ -506,47 +424,7 @@ Coordinates::~Coordinates()
 
 void Coordinates::GetQuaternion(double *q) const
 {
-    if ( q == NULL)
-    {
-        return;
-    }
-    
-    double s;
-    double trace = rot_[0][0] + rot_[1][1] + rot_[2][2] + 1.0;
-    if (trace >= 1.0f) {
-        s = 0.5f / sqrtf(trace);
-        q[0] = (rot_[1][2] - rot_[2][1]) * s;
-        q[1] = (rot_[2][0] - rot_[0][2]) * s;
-        q[2] = (rot_[0][1] - rot_[1][0]) * s;
-        q[3] = 0.25f / s; // w
-    }
-    else {
-        double max = rot_[1][1] > rot_[2][2] ? rot_[1][1] : rot_[2][2];
-        if (max < rot_[0][0]) { // ?
-            s = sqrtf(rot_[0][0] - (rot_[1][1] + rot_[2][2]) + 1.0f);
-            q[0] = s * 0.5f;
-            s = 0.5f / s;
-            q[1]= (rot_[0][1] + rot_[1][0]) * s;
-            q[2] = (rot_[2][0] + rot_[0][2]) * s;
-            q[3] = (rot_[1][2] - rot_[2][1]) * s; // w
-        }
-        else if (max == rot_[1][1]) {
-            s = sqrtf(rot_[1][1] - (rot_[2][2] + rot_[0][0]) + 1.0f);
-            q[1] = s * 0.5f;
-            s = 0.5f / s;
-            q[0] = (rot_[0][1] + rot_[1][0]) * s;
-            q[2] = (rot_[1][2] + rot_[2][1]) * s;
-            q[3] = (rot_[2][0] - rot_[0][2]) * s;
-        }
-        else {
-            s = sqrtf(rot_[2][2] - (rot_[0][0] + rot_[1][1]) + 1.0f);
-            q[2] = s * 0.5f;
-            s = 0.5 / s;
-            q[0] = (rot_[2][0] + rot_[0][2]) * s;
-            q[1] = (rot_[1][2] + rot_[2][1]) * s;
-            q[3] = (rot_[0][1] - rot_[1][0]) * s;
-        }
-    }
+    rot_.GetQuaternion(q);
 }
 
 void TransformCoords(const Coordinates &c1, const Coordinates &c2, Coordinates &c3)

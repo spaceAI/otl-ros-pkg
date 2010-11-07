@@ -1,8 +1,8 @@
 // copyright Takashi Ogura <t.ogura@gmail.com>
 // 
 //
-#ifndef EEOMETRY_COORDINATES_H
-#define EEOMETRY_COORDINATES_H
+#ifndef EGEOMETRY_COORDINATES_H
+#define EGEOMETRY_COORDINATES_H
 
 #include <egeometry/vector3.h>
 #include <egeometry/matrix33.h>
@@ -11,10 +11,6 @@
 
 namespace egeometry
 {
-
-typedef Vector3 FloatVector;
-typedef Matrix33 FloatMatrix;
-
 
 enum WorldOrLocal
 {
@@ -36,6 +32,10 @@ inline double RadToDeg(double rad)
 {
     return rad / M_PI * 180;
 }
+
+const FloatVector kAxisX = FloatVector(1, 0, 0);
+const FloatVector kAxisY = FloatVector(0, 1, 0);
+const FloatVector kAxisZ = FloatVector(0, 0, 1);
 
 /// 座標系を表すクラス。位置と姿勢を持つ。
 class Coordinates
@@ -67,10 +67,6 @@ public:
     const FloatMatrix & GetRotation() const;
     /// 位置を返す
     const FloatVector & GetPosition() const;
-#if 0
-    void GetRotation(FloatMatrix &result_matrix) const;
-    void GetPosition(FloatVector &result_vector) const;
-#endif
     /// 上位互換のため。
     inline virtual void Changed(){};
     /// 回転行列の0列を返す
@@ -119,9 +115,9 @@ public:
     /// 世界座標系での位置をこの座標系での位置に直す
     virtual void GetInverseTransformVector(const FloatVector &pos, FloatVector &result_vector) const;
     /// 指定した軸回りにこの座標系を回転させる。
-    virtual void RotateWithAxis(const double theta, const FloatVector &axis, const WorldOrLocal local=kLocal);
+    virtual void Rotate(const double theta, const FloatVector &axis, const WorldOrLocal local=kLocal);
     /// 指定した軸回りに回転行列に姿勢をセットする
-    virtual void OrientWithAxis(const double theta, const FloatVector &axis, const WorldOrLocal local=kLocal);
+    virtual void Orient(const double theta, const FloatVector &axis, const WorldOrLocal local=kLocal);
     /// 相対的に位置を移動させる。local==trueならこの座標基準。falseなら世界座標基準
     virtual void Translate (const FloatVector &vector, const WorldOrLocal local=kLocal);
     /// 絶対的に位置を移動させる。local==trueならこの座標基準。falseなら世界座標基準
@@ -138,11 +134,13 @@ public:
     virtual void SetQuaternion(const double* const q);
     /// 姿勢をquaternionで取得する
     void GetQuaternion(double *q) const;
-
+    /// 座標系を移動する
     virtual void MoveTo(const Coordinates &dest_coords, const WorldOrLocal local=kLocal);
-
+    /// 座標系をかける
     virtual void Transform(const Coordinates &coords, Coordinates &result_coords, const WorldOrLocal local=kLocal);
+    /// 変形させる座標系を得る
     virtual void GetTransformation(const Coordinates &coords, Coordinates &result_coords, WorldOrLocal local=kLocal) const;
+    /// この座標系から見た座標系を返す
     virtual void GetInverseTransformation(Coordinates &coords) const;
     
     //virtual void Transform(const Coordinates &coords, const Coordinates &base_coords, Coordinates &result_coords);
@@ -169,8 +167,11 @@ public:
       virtual void OrientWithMatrix(FloatMatrix &matrix, const Coordinates &base_coords);
     */
 private:
+    /// 位置
     FloatMatrix rot_;
+    /// 姿勢
     FloatVector pos_;
+    /// 名前
     std::string name_;
 };
 
@@ -178,9 +179,6 @@ private:
 bool operator== (const Coordinates &c1, const Coordinates &c2);
 /// 比較演算。==の反転
 bool operator!= (const Coordinates &c1, const Coordinates &c2);
-
-void GetInverseMatrix(const FloatMatrix &mat, FloatMatrix &ret);
-void SetRotationMatrixWithAxis(const double theta, const FloatVector axis, FloatMatrix &mat);
 void TransformCoords(const Coordinates &c1, const Coordinates &c2, Coordinates &c3);
 void TransformVector(const Coordinates &c1, const FloatVector &v1, FloatVector &v2);
 
@@ -189,4 +187,4 @@ std::ostream& operator<<(std::ostream& stream, const Coordinates& coord);
 }
 
 
-#endif // EUSGEOMETRY_COORDINATES_H
+#endif // EGEOMETRY_COORDINATES_H
