@@ -8,16 +8,15 @@ from otl_roomba.roombaif import *
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 
-SPEEDLIMIT = 150
+SPEEDLIMIT = 100
 EPSLIMIT = 5
 
 
 def _vel2rot(vel):
     if WHEEL_OFFSET != 0:
-        return vel / (WHEEL_OFFSET / 2)
+        return vel / (WHEEL_OFFSET / 2.0)
     else:
         return 0
-
 
 def _filter_limit(vel, limit):
     if vel > limit:
@@ -45,7 +44,8 @@ class RoombaTwistJoy():
         self._pitch_gain = 2
     def _send_vel_cb(self, joy):
         tw = Twist()
-        if joy.buttons[4] == 1:
+        # L1 button 
+        if joy.buttons[10] == 1:
             # pitch -->> accel
             pitch = joy.axes[17]
             self._speed = pitch * self._pitch_gain
@@ -59,25 +59,30 @@ class RoombaTwistJoy():
             # set twist
             tw.linear.x = self._speed
             tw.angular.z = self._rot
-        elif joy.buttons[12] == 1:
-            tw.linear.x = 0
-            tw.angular.z = _vel2rot(-SPEEDLIMIT)
+            #if joy.buttons[14] == 1:
+            #   self._dock_pub.publish(True)
+            if joy.buttons[12] == 1:
+               tw.linear.x = 0
+               tw.angular.z = _vel2rot(-SPEEDLIMIT)
+            if joy.buttons[13] == 1:
+               self._clean_pub.publish(True)
+            elif joy.buttons[15] == 1:
+               self._clean_pub.publish(False)
+
         else:
             tw.linear.x = 0
             tw.angular.z = 0
         self._twist_pub.publish(tw)
 
-        if joy.buttons[13] == 1:
-            self._clean_pub.publish(True)
-        elif joy.buttons[15] == 1:
-            self._clean_pub.publish(False)
-
     def main(self):
+        global SPEEDLIMIT
         rospy.init_node('teleop_roomba_twist')
         self._twist_pub = rospy.Publisher('roomba/command', Twist)
         self._clean_pub = rospy.Publisher('roomba/clean', Bool)
+        self._dock_pub = rospy.Publisher('roomba/dock', Bool)
         rospy.Subscriber('joy', Joy, self._send_vel_cb, queue_size=1)
-
+        SPEEDLIMIT = rospy.get_param('~max_speed', SPEEDLIMIT)
+        print 'limit =', SPEEDLIMIT
         rospy.spin()
 
 if __name__ == '__main__':
