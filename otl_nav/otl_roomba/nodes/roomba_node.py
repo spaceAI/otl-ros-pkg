@@ -26,6 +26,7 @@ class RoombaNode(RoombaBaseNode):
 
 
 if __name__ == '__main__':
+    rospy.init_node('roomba')
     rmb = RoombaIf()
     rn = RoombaNode(rmb)
     rn.main()

@@ -264,6 +264,15 @@ class RoombaIf(object):
         vel_r = int(ts + tw)
         vel_l = int(ts - tw)
         self.set_direct_vel(vel_r, vel_l)
+        
+    def dock(self):
+        """start seek and docking to charger
+        """
+        try:
+            cmd = struct.pack('BB', DOCKCMD, 0)
+        except:
+            raise RoombaError('Fatal error in clean_off')
+        self._send_command(cmd)
 
     def clean_off(self):
         """turn off the clearning motors.
@@ -549,16 +558,18 @@ __all__ = [
 if __name__ == '__main__':
     r = RoombaIf(full=True)
     r.setup()
-    time.sleep(1.0)
-    r.get_distance()
-    r.get_angle()
-    import math
-    r.set_twist_vel(80, math.radians(0))
-    import time
-    time.sleep(1.0)
-    r.set_direct_vel(0, 0)
-    print r.get_distance() # mm
-    print r.get_angle() # deg 
+    r.dock()
+
+#    time.sleep(1.0)
+#    r.get_distance()
+#    r.get_angle()
+#     import math
+#     r.set_twist_vel(80, math.radians(0))
+#     import time
+#     time.sleep(1.0)
+#     r.set_direct_vel(0, 0)
+#     print r.get_distance() # mm
+#     print r.get_angle() # deg 
 
 #    r._song_test()
 #    r.teardown()

@@ -1,10 +1,12 @@
 <launch>
   <node pkg="otl_roomba" type="teleop_roomba_twist_node.py" name="roombaps3"/>
-  <node pkg="otl_roomba" type="roomba_twist_node.py" name="roomba"/>
+  <node pkg="otl_roomba" type="roomba_twist_node.py" name="roomba">
+    <param name="device" value="/dev/ttyUSB1"/>
+  </node>
 
  <!-- PS3 joy node -->
-  <node respawn="true" pkg="ps3joy"
-        type="ps3_joy_node" name="ps3_joy" >
+  <node respawn="true" pkg="joy"
+        type="joy_node" name="ps3_joy" >
     <param name="dev" type="string" value="/dev/input/js0" />
     <param name="deadzone" value="0.12" />
   </node>

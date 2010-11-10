@@ -20,6 +20,7 @@ class RoombaTwistNode(RoombaBaseNode):
 #        self._odom.proc()
 #        if ( self._rmb.get_voltage() < 12 * 1000):
 #            self._rmb.play_song(0)
+           
     def _activate(self, empty):
         self._rmb.activate()
 
@@ -28,6 +29,8 @@ class RoombaTwistNode(RoombaBaseNode):
                          Twist, self._send_vel_cb, queue_size=1)
         rospy.Subscriber('roomba/clean',
                          Bool, self._send_clean_cb, queue_size=1)
+        rospy.Subscriber('roomba/dock',
+                         Bool, self._send_dock_cb, queue_size=1)
         rospy.Service('activate', Empty, self._activate)
 
         rate = rospy.Rate(20)
@@ -40,7 +43,13 @@ class RoombaTwistNode(RoombaBaseNode):
         self._odom = rop
 
 if __name__ == '__main__':
-    rmb = RoombaIf()
+    rospy.init_node('roomba')
+    dev_param = '/dev/ttyUSB0'
+
+    if rospy.has_param('~device'):
+        dev_param = rospy.get_param('~device')
+    print 'roomba open device ', dev_param
+    rmb = RoombaIf(device=dev_param)
     rn = RoombaTwistNode(rmb)
     rop = RoombaOdometryPublisher(rmb)
     rn.set_odometry(rop)
