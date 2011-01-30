@@ -1,0 +1,10 @@
+<launch>
+  <include file="$(find openni_camera)/launch/openni_kinect.launch"/>
+  <node pkg="tf" type="static_transform_publisher" name="kinect_link4" args="0 0 0 0 -1.57 1.57 /openni_depth  /openni_camera 100" />  
+  <node pkg="openni_tracker" type="openni_tracker" name="openni_tracker"/>
+  <node pkg="otl_gesture" type="cleaning_recog" name="cleaning_recog"/>
+  <node pkg="otl_gesture_roomba" type="gesture2roomba.py" name="gesture2roomba"/>
+  <node pkg="otl_roomba" type="roomba_twist_node.py" name="roomba">
+    <param name="device" value="/dev/rfcomm0"/>
+  </node>
+</launch>
