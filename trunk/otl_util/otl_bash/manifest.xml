@@ -1,0 +1,15 @@
+<package>
+  <description brief="bash utilities for OTL">
+
+     otl_bash contains otlbash script.
+     this enable easy access to otl ros packages.
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/otl_bash</url>
+
+</package>
+
+
