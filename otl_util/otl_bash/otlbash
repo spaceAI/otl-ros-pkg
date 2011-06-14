@@ -1,0 +1,25 @@
+function _otlcomplete_sub_dir {
+    local arg opts rosvals
+    COMPREPLY=()
+    arg="${COMP_WORDS[COMP_CWORD]}"
+    _ros_decode_path ${arg}
+    if [[ -z ${rosvals[2]} ]]; then
+        opts=`_ros_list_locations | grep ^${OTLCD_PREFIX}`
+        IFS=$'\n'
+        COMPREPLY=($(compgen -W "${opts}" -S / -- ${rosvals[0]}))
+        unset IFS
+    else
+        if [ -e ${rosvals[1]}${rosvals[2]} ]; then
+          opts=`find -H ${rosvals[1]}${rosvals[2]} -maxdepth 1 -mindepth 1 -type d
+ ! -regex ".*/[.].*" -print0 | tr '\000' '\n' | sed -e "s/.*\/\(.*\)/\1\//g"`
+        else
+          opts=''
+        fi
+        IFS=$'\n'
+        COMPREPLY=($(compgen -P ${rosvals[0]}${rosvals[2]} -W "${opts}" -- ${rosvals[3]}))
+        unset IFS
+    fi
+}
+
+alias otlcd=roscd
+complete -F "_otlcomplete_sub_dir" -o "nospace" "otlcd"
