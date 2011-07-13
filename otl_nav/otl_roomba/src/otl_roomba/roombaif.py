@@ -120,6 +120,7 @@ class RoombaIf(object):
         """
         self.open(self._device)
         self.activate(full=self._full)
+        time.sleep(2)
         self.set_led(DEBRISLED, 0, 0)
         self.set_led(CHECKLED, 0, 50)
         self.set_led(DOCKLED, 0, 100)
