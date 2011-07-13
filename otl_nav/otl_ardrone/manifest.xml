@@ -1,0 +1,19 @@
+<package>
+  <description brief="otl_ardrone">
+
+     otl_ardrone contains launch file for control AR.Drone.
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/otl_ardrone</url>
+  <depend package="otl_roomba"/>
+  <depend package="ardrone_brown"/>
+  <depend package="otl_msgconverter"/>
+  <depend package="ps3joy"/>
+  <depend package="joy"/>
+
+</package>
+
+
