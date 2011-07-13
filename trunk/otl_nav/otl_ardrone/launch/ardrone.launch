@@ -1,0 +1,16 @@
+<launch>
+  <node pkg="otl_roomba" type="teleop_roomba_twist_node.py" name="teleop_roomba">
+    <remap from="/roomba/command" to="/cmd_vel"/>
+  </node>
+  <node pkg="joy" type="joy_node" name="joy_node"/>
+  <node pkg="otl_msgconverter" type="bool2empty.py" name="ardrone_land_takeoff">
+    <remap from="input" to="/roomba/clean"/>
+    <remap from="true" to="/ardrone/takeoff"/>
+    <remap from="false" to="/ardrone/land"/>
+  </node>
+  <node pkg="otl_msgconverter" type="bool2empty.py" name="ardrone_reset">
+    <remap from="input" to="/roomba/dock"/>
+    <remap from="true" to="/ardrone/reset"/>
+  </node>
+  <node pkg="ardrone_brown" type="ardrone_driver" name="ardrone_driver"/> 
+</launch>
