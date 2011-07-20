@@ -40,4 +40,5 @@ target_link_libraries(hsv_panel ${wxWidgets_LIBRARIES})
 
 include_directories(include/lv1_image)
 rosbuild_add_executable(img_filter_lv1 src/img_filter_lv1.cpp src/Blob.cpp src/BlobResult.cpp src/BlobExtraction.cpp)
+rosbuild_add_executable(img_filter_pos src/img_filter_pos.cpp src/Blob.cpp src/BlobResult.cpp src/BlobExtraction.cpp)
 
