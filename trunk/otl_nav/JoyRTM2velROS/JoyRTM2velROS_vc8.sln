@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{BEF8B097-2B8E-46F1-8D37-FEE70F8A101C}") = "JoyRTM2velROSComp", "JoyRTM2velROSComp_vc8.vcproj", "{DE565103-F85D-4829-8125-7414D94A05B8}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{BEF8B097-2B8E-46F1-8D37-FEE70F8A101C}") = "JoyRTM2velROS", "JoyRTM2velROS_vc8.vcproj", "{BA3D5751-3DED-4D1B-A68C-F10BE5CC84D6}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Win32 = Release|Win32
+		Debug|Win32 = Debug|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE565103-F85D-4829-8125-7414D94A05B8}.Release|Win32.ActiveCfg = Release|Win32
+		{DE565103-F85D-4829-8125-7414D94A05B8}.Release|Win32.Build.0   = Release|Win32
+		{DE565103-F85D-4829-8125-7414D94A05B8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DE565103-F85D-4829-8125-7414D94A05B8}.Debug|Win32.Build.0   = Debug|Win32
+		{BA3D5751-3DED-4D1B-A68C-F10BE5CC84D6}.Release|Win32.ActiveCfg = Release|Win32
+		{BA3D5751-3DED-4D1B-A68C-F10BE5CC84D6}.Release|Win32.Build.0   = Release|Win32
+		{BA3D5751-3DED-4D1B-A68C-F10BE5CC84D6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BA3D5751-3DED-4D1B-A68C-F10BE5CC84D6}.Debug|Win32.Build.0   = Debug|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
