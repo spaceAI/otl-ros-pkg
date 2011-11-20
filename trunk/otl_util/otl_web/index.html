@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <!--     <script type="text/javascript" src="http://brown-ros-pkg.googlecode.com/svn/tags/brown-ros-pkg/rosjs/ros.min.js"></script> -->
+    <script type="text/javascript" src="ros.min.js"></script>
+    <script type="text/javascript" src="joy.js"></script>
+    <script type="text/javascript" src="roomba.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <meta name="viewport" content="width=480, user-scalable=no, maximum-scale=0.6667"/>
+    
+    <title>Robot Controller Beta</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
+  </head>
+  
+  <body onload="main()">
+    <div align="center">
+      <img src="img/logo.png"
+	   style="width:250px; height:60px"/><br>
+    </div>
+    <div align="center">
+      <img src="img/camera_dummy.jpg" alt="camera view" name="camera"/>
+    </div>
+    <div align="center">
+      <canvas align="left" id="joyCanvas" width="150" height="150" style="border:5px solid #CCC;"></canvas>
+      <form name="motions">
+	<input type="button" value="バイバイ" onClick="doCommand('baibai');">
+	<input type="button" value="だばだば" onClick="doCommand('dabadaba');">
+	<input type="button" value="乾杯" onClick="doCommand('kanpai');">
+	<input type="button" value="帰還" onClick="returnToDock();">
+      </form>
+    </div>
+    <div align="center">
+      <form name="head" action="#">
+	首左右角度
+	<input type="range" name="slider" min="-60" max="60" step="10" onchange="setHeadYawAngle(this.value);"/>
+	<span id="range">0</span>
+      </form>
+      <form name="head_pitch" action="#">
+	首縦角度
+	<input type="range" name="slider2" min="-60" max="60" step="10" onchange="setHeadPitchAngle(this.value);" value="0"/>
+	<span id="head_pitch_value">0</span>
+      </form>
+    </div>
+    <div align="center">
+      ゆっくりしゃべる(ローマ字入力)<br>
+      <form name="talk" action="#">
+	<input type="text" name="talk_input" size="30" onkeypress="return talkEnter(event, this.value)" id="talk_input">
+      </form>
+    </div>
+    <div id="console" align="center">
+      <form name="log" action="#">
+	<textarea name="textarea" rows="3" cols="30" readonly="true" title="console"></textarea>
+      </form>
+    </div>
+</body>
+</html>
+
