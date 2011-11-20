@@ -160,6 +160,29 @@ function initializeCameraCallback() {
   }
 }
 
+function round(num, n) {
+  var tmp = Math.pow(10, n);
+  return Math.round(num * tmp) / tmp;
+}
+
+function initializeBattery(name, topic) {
+  try {
+    connection.addHandler(topic,
+			  function(msg) {
+			    document.getElementById(name + '_battery').innerHTML = round(msg.data * 100, 2) + "%";
+			  });
+  } catch (error) {
+    log('error in addHandler');
+    return;
+  }
+  try {
+    connection.callService('/rosjs/subscribe', '["' + topic + '", 0]', function(rsp){});
+    log(name + ' battery is connected');
+  } catch (error) {
+    log('error in subscribe' + name + ' battery!');
+  }
+}
+
 function checkTopic (topics, target) {
   var found = false;
   for (i in topics) {

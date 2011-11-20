@@ -21,41 +21,24 @@ function main() {
 			       } else {
 				 log('camera not found');
 			       }
+			       if (checkTopic(rsp, '/pc/battery_rate')) {
+				 initializeBattery('pc', '/pc/battery_rate');
+			       } else {
+				 log('pc battery not found')
+			       }
+			       if (checkTopic(rsp, '/roomba/battery_charge')) {
+				 initializeBattery('roomba', '/roomba/battery_charge');
+			       } else {
+				 log('roomba battery not found')
+			       }
+			       if (checkTopic(rsp, '/arm/battery_rate')) {
+				 initializeBattery('arm', '/arm/battery_rate');
+			       } else {
+				 log('arm battery not found')
+			       }
 			     });
       // activate roomba
       connection.callService('/activate', '[]', function(){});
-      log('activated roomba')
-      function handleKey(code, down) {
-	var scale = 0;
-	if (down == true) {
-	  scale = 1;
-	}
-	switch (code) {
-	case 37:
-	  //left
-	  vel_z = 0.5 * scale;
-	  break;
-	case 38:
-	  //up
-	  vel_x = .5 * scale;
-	  break;
-	case 39:
-	  //right
-	  vel_z = -0.5 * scale;
-	  break;
-	case 40:
-	  //down
-	  vel_x = -.5 * scale;
-	  break;
-	}
-	setVelocity(vel_x, vel_z);
-      }
-
-      document.addEventListener('keydown', function (e) {
-				  handleKey(e.keyCode, true);
-				}, true);
-      document.addEventListener('keyup', function (e) {
-				  handleKey(e.keyCode, false);
-				}, true);
+      log('activated roomba');
     });
 }
