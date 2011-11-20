@@ -1,0 +1,17 @@
+<package>
+  <description brief="otl_battery_checker">
+
+     otl_battery_checker is check PC's battery and publish it.
+     this program uses ACPI information of linux /proc/acpi/battery files.
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/otl_battery_checker</url>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+
