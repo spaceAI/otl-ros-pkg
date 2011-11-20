@@ -169,7 +169,18 @@ function initializeBattery(name, topic) {
   try {
     connection.addHandler(topic,
 			  function(msg) {
-			    document.getElementById(name + '_battery').innerHTML = round(msg.data * 100, 2) + "%";
+			      document.getElementById(name + '_battery').innerHTML = round(msg.data * 100, 2) + "%";
+			      if (msg.data >= 0.8) {
+				  document.getElementById(name + '_battery_img').innerHTML = '<img src="img/battery4.png" height="40" width="40"/>';
+			      } else if (msg.data >= 0.6) {
+				  document.getElementById(name + '_battery_img').innerHTML = '<img src="img/battery3.png" height="40" width="40"/>';
+			      } else if (msg.data >= 0.4) {
+				  document.getElementById(name + '_battery_img').innerHTML = '<img src="img/battery2.png" height="40" width="40"/>';
+			      } else if (msg.data >= 0.2) {
+				  document.getElementById(name + '_battery_img').innerHTML = '<img src="img/battery1.png" height="40" width="40"/>';
+			      } else {
+				  document.getElementById(name + '_battery_img').innerHTML = '<img src="img/battery0.png" height="40" width="40"/>';
+			      }
 			  });
   } catch (error) {
     log('error in addHandler');
