@@ -1,27 +1,27 @@
 var canvas;
 var ctx;
-var timerDrawID;  //æç”»ã‚¿ã‚¤ãƒãƒ¼ID
-var cW = 150;  //ã‚­ãƒ£ãƒ³ãƒã‚¹æ¨ªã‚µã‚¤ã‚º
-var cH = 150;  //ã‚­ãƒ£ãƒ³ãƒã‚¹ç¸¦ã‚µã‚¤ã‚º
-var mouseDownFlag = false;  //ãƒã‚¦ã‚¹ãƒ€ã‚¦ãƒ³ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
-var mouseX1;  //ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹ã—ãŸåº§æ¨™
-var mouseY1;  //ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹ã—ãŸåº§æ¨™
-var mouseX2;  //ãƒ‰ãƒ©ãƒƒã‚°ä¸­ã®åº§æ¨™
-var mouseY2;  //ãƒ‰ãƒ©ãƒƒã‚°ä¸­ã®åº§æ¨™
-var dragDivX;  //ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹åœ°ç‚¹ã¨ç¾åœ¨ã®å·®
-var dragDivY;  //ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹åœ°ç‚¹ã¨ç¾åœ¨ã®å·®
+var timerDrawID;  //•`‰æƒ^ƒCƒ}[ID
+var cW = 150;  //ƒLƒƒƒ“ƒoƒX‰¡ƒTƒCƒY
+var cH = 150;  //ƒLƒƒƒ“ƒoƒXcƒTƒCƒY
+var mouseDownFlag = false;  //ƒ}ƒEƒXƒ_ƒEƒ“‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
+var mouseX1;  //ƒhƒ‰ƒbƒOŠJn‚µ‚½À•W
+var mouseY1;  //ƒhƒ‰ƒbƒOŠJn‚µ‚½À•W
+var mouseX2;  //ƒhƒ‰ƒbƒO’†‚ÌÀ•W
+var mouseY2;  //ƒhƒ‰ƒbƒO’†‚ÌÀ•W
+var dragDivX;  //ƒhƒ‰ƒbƒOŠJn’n“_‚ÆŒ»İ‚Ì·
+var dragDivY;  //ƒhƒ‰ƒbƒOŠJn’n“_‚ÆŒ»İ‚Ì·
 var obj;
-//ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚¨ãƒ¼ã‚¸ã‚§ãƒ³ãƒˆ
+//ƒ†[ƒU[ƒG[ƒWƒFƒ“ƒg
 var isiPad;
 var isiPhone;
 
 function joy_init(){
-  //ã‚­ãƒ£ãƒ³ãƒã‚¹ã®åˆæœŸå‡¦ç†
+  //ƒLƒƒƒ“ƒoƒX‚Ì‰Šúˆ—
   canvas = document.getElementById('joyCanvas');
   if ( ! canvas || ! canvas.getContext ) return false;
-  //2Dã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+  //2DƒRƒ“ƒeƒLƒXƒg
   ctx = canvas.getContext('2d');
-  //ã‚¤ãƒ™ãƒ³ãƒˆ
+  //ƒCƒxƒ“ƒg
   canvas.addEventListener("mousedown", mouseDownListner, false);
   canvas.addEventListener("mousemove", mouseMoveListner, false);
   canvas.addEventListener("mouseup", mouseUpListner, false);
@@ -30,18 +30,18 @@ function joy_init(){
   canvas.addEventListener("touchmove", mouseMoveListner, false);
   canvas.addEventListener("touchend", mouseUpListner, false);
   canvas.addEventListener("touchcancel", mouseUpListner, false);
-  //ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+  //ƒIƒuƒWƒFƒNƒg
   obj = new Object();
   obj.w = 40;
   obj.h = 40;
   obj.x = cW*0.5 - obj.w * 0.5;
   obj.y = cH*0.5 - obj.h * 0.5;
 
-  //ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚¨ãƒ¼ã‚¸ã‚§ãƒ³ãƒˆ
+  //ƒ†[ƒU[ƒG[ƒWƒFƒ“ƒg
   isiPad = navigator.userAgent.match(/iPad/i) != null;
   isiPhone = navigator.userAgent.match(/iPhone/i) != null;
 
-  //ã‚¿ã‚¤ãƒãƒ¼é–‹å§‹
+  //ƒ^ƒCƒ}[ŠJn
   setTimerDraw();
 }
 
@@ -51,7 +51,7 @@ function setTimerDraw(){
 }
 
 function joy_draw() {
-  //è¡¨ç¤ºã‚¯ãƒªã‚¢
+  //•\¦ƒNƒŠƒA
   ctx.clearRect(0, 0, cW, cH);
   ctx.fillStyle="#000000";
   ctx.beginPath();
@@ -66,7 +66,7 @@ function joy_draw() {
   ctx.lineTo(cW*0.5,cH);
   ctx.stroke();
 
-  //ç”»åƒã‚’æã
+  //‰æ‘œ‚ğ•`‚­
   if (mouseDownFlag) {
     ctx.fillStyle="#FF0000";
     ctx.fillRect(obj.x + dragDivX, obj.y + dragDivY, obj.w, obj.h);
@@ -79,16 +79,16 @@ function twistMsg(x, z) {
   return '{"linear":{"x":' + x + ',"y":0,"z":0}, "angular":{"x":0,"y":0,"z":' + z + '}}';
 }
 
-//ãƒã‚¦ã‚¹ã‚¤ãƒ™ãƒ³ãƒˆ
+//ƒ}ƒEƒXƒCƒxƒ“ƒg
 function mouseDownListner(e) {
   var rect = e.target.getBoundingClientRect();
-  //åº§æ¨™å–å¾—
+  //À•Wæ“¾
   if (isiPad || isiPhone) {
-    //iPad & iPhoneç”¨å‡¦ç†
+    //iPad & iPhone—pˆ—
     mouseX1 = e.touches[0].pageX - rect.left;
     mouseY1 = e.touches[0].pageY - rect.top;
   } else {
-    //PCç”¨å‡¦ç†
+    //PC—pˆ—
     mouseX1 = e.clientX - rect.left;
     mouseY1 = e.clientY - rect.top;
   }
@@ -104,15 +104,15 @@ function mouseDownListner(e) {
 function mouseMoveListner(e) {
   e.preventDefault();
   if (mouseDownFlag) {
-    //ç¸¦ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã‚’ã—ãªã„ï¼ˆiPad & iPhoneï¼‰
-    //åº§æ¨™å–å¾—
+    //cƒXƒNƒ[ƒ‹‚ğ‚µ‚È‚¢iiPad & iPhonej
+    //À•Wæ“¾
     var rect = rect = e.target.getBoundingClientRect();
     if (isiPad || isiPhone) {
-      //iPad & iPhoneç”¨å‡¦ç†
+      //iPad & iPhone—pˆ—
       mouseX2 = e.touches[0].pageX - rect.left;
       mouseY2 = e.touches[0].pageY - rect.top;
     } else {
-      //PCç”¨å‡¦ç†
+      //PC—pˆ—
       mouseX2 = e.clientX - rect.left;
       mouseY2 = e.clientY - rect.top;
     }
