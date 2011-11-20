@@ -507,6 +507,11 @@ class RoombaIf(object):
         """
         return self._get_ushort_sensor(25)
 
+    def get_battery_capacity(self):
+        """get the battery capacity
+        """
+        return self._get_ushort_sensor(26)
+
 
     def get_mode(self):
         """get the mode of OI
