@@ -10,13 +10,36 @@
     
     <title>Robot Controller Beta</title>
     <meta http-equiv="Content-Type" content="text/html; charset=shift_jis">
+    <link rel="stylesheet" href="default.css" type="text/css" />
   </head>
   
   <body onload="main()">
-    <div align="center">
-      <img src="img/logo.png"
-	   style="width:250px; height:60px"/><br>
+
+  <div align="center" >
+    <div class="imagebox" style="float:right">
+      <p calss="image" id="arm_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
+      <p calss="caption">アーム</P>
+      <p calss="caption" id="arm_battery">0%</P>
     </div>
+    <div class="imagebox" style="float:right">
+      <p calss="image" id="roomba_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
+      <p calss="caption">ルンバ</P>
+      <p calss="caption" id="roomba_battery">0%</P>
+    </div>
+    <div class="imagebox" style="float:right">
+      <p calss="image" id="pc_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
+      <p calss="caption">PC</P>
+      <p calss="caption" id="pc_battery">0%</P>
+    </div>
+    <div style="clear:both" />
+  </div>
+
+  <div align="center">
+    <img src="img/logo.png"
+	 style="width:250px; height:60px"/><br>
+  </div>
+  
+
     <div align="center">
       <img src="img/camera_dummy.jpg" alt="camera view" name="camera"/>
     </div>
@@ -41,6 +64,8 @@
 	<span id="head_pitch_value">0</span>
       </form>
     </div>
+
+
     <div align="center">
       ゆっくりしゃべる(ローマ字入力)<br>
       <form name="talk" action="#">
