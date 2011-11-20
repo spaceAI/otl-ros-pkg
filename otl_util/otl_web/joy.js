@@ -127,15 +127,14 @@ function mouseMoveListner(e) {
 }
 
 function mouseUpListner(e) {
-  if (mouseDownFlag) {
-    dragEnd();
-  }
+  dragEnd();
 }
+
 function dragEnd() {
   mouseDownFlag = false;
   obj.x = cW*0.5 - obj.w*0.5;
   obj.y = cH*0.5 - obj.h*0.5;
   connection.publish('/cmd_vel', 'geometry_msgs/Twist', twistMsg(0, 0));
-//  obj.x += dragDivX;
-//  obj.y += dragDivY;
+  connection.publish('/cmd_vel', 'geometry_msgs/Twist', twistMsg(0, 0));
+
 }
