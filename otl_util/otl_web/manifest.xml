@@ -1,0 +1,15 @@
+<package>
+  <description brief="otl_web">
+
+    otl_web is web interface for manipulation of otl robots.
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/otl_web</url>
+  <depend package="rosbridge"/>
+
+</package>
+
+
