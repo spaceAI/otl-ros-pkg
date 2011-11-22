@@ -1,8 +1,7 @@
 function main() {
-//  connectToROS("roomba.dyndns.tv", "192.168.11.4");
-//  connectToROS("mtm07otl.ddo.jp", "192.168.100.101");
+  connectToROS("roomba.dyndns.tv", "192.168.11.4");
   joy_init();
-  connectToROS("mtm07otl.ddo.jp", "192.168.0.4");
+//  connectToROS("mtm07otl.ddo.jp", "192.168.0.4");
 //  connectToROS("mtm07otl.ddo.jp", "127.0.0.1");
   
   connection.setOnClose(function (e) {
@@ -14,9 +13,6 @@ function main() {
   connection.setOnOpen(
       function (e) {
 	  log('connected to ROS');
-	  initializeBattery('arm', '/arm/battery_rate');     
-	  initializeBattery('roomba', '/roomba/battery_charge');     
-	  initializeBattery('pc', '/pc/battery_rate');     
 	  connection.callService('/rosjs/topics', '[]',
 	  			 function(rsp){
 	  			     log('debug');
@@ -43,6 +39,12 @@ function main() {
 	  			 });
 	  // activate roomba
 	  connection.callService('/activate', '[]', function(){});
-	  log('activated roomba');
+	log('activated roomba');
+	// publish for advertise
+	connection.publish('/cmd_vel', 'geometry_msgs/Twist', twistMsg(0,0));
+	connection.publish('/motion', 'std_msgs/String', stringMsg(""));
+	connection.publish('/tray_angle', 'std_msgs/Float64', float64Msg(0));
+	connection.publish('/talk', 'std_msgs/String', stringMsg(""));
+	connection.publish('/head_angle', 'std_msgs/Float64', float64Msg(0));
       });
 }
