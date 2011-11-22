@@ -1,7 +1,7 @@
 <html>
   <head>
     <!--     <script type="text/javascript" src="http://brown-ros-pkg.googlecode.com/svn/tags/brown-ros-pkg/rosjs/ros.min.js"></script> -->
-    <script type="text/javascript" src="ros.min.js"></script>
+    <script type="text/javascript" src="ros.js"></script>
     <script src="html5slider.js"></script>
     <script type="text/javascript" src="joy.js"></script>
     <script type="text/javascript" src="roomba.js"></script>
@@ -15,28 +15,29 @@
   
   <body onload="main()">
 
-  <div align="center" >
+  <div align="center" style="position:fixed; right:1px"/>
     <div class="imagebox" style="float:right">
-      <p calss="image" id="arm_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
-      <p calss="caption">アーム</P>
-      <p calss="caption" id="arm_battery">0%</P>
+      <p class="image" id="arm_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
+      <p class="caption">アーム</P>
+      <p class="caption" id="arm_battery">0%</P>
     </div>
     <div class="imagebox" style="float:right">
-      <p calss="image" id="roomba_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
-      <p calss="caption">ルンバ</P>
-      <p calss="caption" id="roomba_battery">0%</P>
+      <p class="image" id="roomba_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
+      <p class="caption">ルンバ</P>
+      <p class="caption" id="roomba_battery">0%</P>
     </div>
     <div class="imagebox" style="float:right">
-      <p calss="image" id="pc_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
-      <p calss="caption">PC</P>
-      <p calss="caption" id="pc_battery">0%</P>
+      <p class="image" id="pc_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
+      <p class="caption">PC</P>
+      <p class="caption" id="pc_battery">0%</P>
+    </div>
+  </div>
+  <div align="center">
+      <img src="img/logo.png"
+	   style="position:float; width:250px; height:60px; top:0px;"/><br>
     </div>
     <div style="clear:both" />
-  </div>
 
-  <div align="center">
-    <img src="img/logo.png"
-	 style="width:250px; height:60px"/><br>
   </div>
   
 
@@ -49,7 +50,7 @@
 	<input type="button" value="バイバイ" onClick="doCommand('baibai');">
 	<input type="button" value="だばだば" onClick="doCommand('dabadaba');">
 	<input type="button" value="乾杯" onClick="doCommand('kanpai');">
-	<input type="button" value="帰還" onClick="returnToDock();">
+<!--	<input type="button" value="帰還" onClick="returnToDock();"> -->
       </form>
     </div>
     <div align="center">
@@ -77,6 +78,8 @@
 	<textarea name="textarea" rows="3" cols="30" readonly="true" title="console"></textarea>
       </form>
     </div>
+    <hr>
+    Chrome 13 or 'earlier' and Safari are supported. twitter: <a href="http://twitter.com/OTL">@OTL</a>
 </body>
 </html>
 

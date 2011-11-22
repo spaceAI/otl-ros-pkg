@@ -3,5 +3,7 @@ div.imagebox {
 /*   background-color: #eeeeff;  /* 背景色 */
 /*   width: 140px; /* 横幅 */
 /*   height: 130px; /* 縦 */
-    font-size: 50%;
+    font-size: 60%;
 }
+
+body {background-color:#eeeeff;}

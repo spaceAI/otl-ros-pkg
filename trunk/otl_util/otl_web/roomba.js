@@ -44,27 +44,29 @@ function setVelocity(vel_x, vel_z) {
 
 }
 
+function boolMsg(data) {
+  return '{"data":' + data + '}';
+}
+
 function returnToDock() {
-  function boolMsg(data) {
-    return '{"data":' + data + '}';
-  }
   connection.publish('/roomba/dock', 'std_msgs/Bool', boolMsg(true));
   log('published return!');
 }
 
+function stringMsg(data) {
+  return '{"data":"' + data + '"}';
+}
 
 function doCommand(motion_name) {
-  function stringMsg(data) {
-    return '{"data":"' + data + '"}';
-  }
   connection.publish('/motion', 'std_msgs/String', stringMsg(motion_name));
   log('published: ' + motion_name);
 }
 
+function float64Msg(data) {
+  return '{"data":' + data + '.0}';
+}
+
 function setHeadYawAngle(angle) {
-  function float64Msg(data) {
-    return '{"data":' + data + '.0}';
-  }
   connection.publish('/tray_angle', 'std_msgs/Float64', float64Msg(angle));
   document.getElementById("range").innerHTML = angle;
   log('published head: ' + angle);
@@ -169,7 +171,7 @@ function initializeBattery(name, topic) {
   try {
     connection.addHandler(topic,
 			  function(msg) {
-			      document.getElementById(name + '_battery').innerHTML = round(msg.data * 100, 2) + "%";
+			      document.getElementById(name + '_battery').innerHTML = round(msg.data * 100, 1) + "%";
 			      if (msg.data >= 0.8) {
 				  document.getElementById(name + '_battery_img').innerHTML = '<img src="img/battery4.png" height="40" width="40"/>';
 			      } else if (msg.data >= 0.6) {
