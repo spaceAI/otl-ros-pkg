@@ -155,7 +155,7 @@ function initializeCameraCallback() {
     return;
   }
   try {
-    connection.callService('/rosjs/subscribe', '["' + image_topic + '", 0]', function(rsp){});
+    connection.callService('/rosbridge/subscribe', '["' + image_topic + '", 0]', function(rsp){});
     log('camera is connected');
   } catch (error) {
     log('error in subscribe camera image!');
@@ -189,7 +189,7 @@ function initializeBattery(name, topic) {
     return;
   }
   try {
-    connection.callService('/rosjs/subscribe', '["' + topic + '", 0]', function(rsp){});
+    connection.callService('/rosbridge/subscribe', '["' + topic + '", 0]', function(rsp){});
     log(name + ' battery is connected');
   } catch (error) {
     log('error in subscribe' + name + ' battery!');

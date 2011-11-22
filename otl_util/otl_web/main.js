@@ -13,7 +13,7 @@ function main() {
   connection.setOnOpen(
       function (e) {
 	  log('connected to ROS');
-	  connection.callService('/rosjs/topics', '[]',
+	  connection.callService('/rosbridge/topics', '[]',
 	  			 function(rsp){
 	  			     log('debug');
 	  			     if (checkTopic(rsp, image_topic)) {
