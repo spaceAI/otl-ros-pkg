@@ -1,5 +1,5 @@
 function main() {
-  connectToROS("roomba.dyndns.tv", "192.168.11.4");
+  connectToROS("mtm07otl.ddo.jp", "192.168.11.4");
   joy_init();
 //  connectToROS("mtm07otl.ddo.jp", "192.168.0.4");
 //  connectToROS("mtm07otl.ddo.jp", "127.0.0.1");
