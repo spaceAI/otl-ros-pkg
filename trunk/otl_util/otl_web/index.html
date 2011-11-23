@@ -39,13 +39,13 @@
     <div style="clear:both" />
 
   </div>
-  
 
     <div align="center">
-      <img src="img/camera_dummy.jpg" alt="camera view" name="camera"/>
+      <img src="img/camera_dummy.jpg" alt="camera view" name="camera"
+	   width="320" height="240"/>
     </div>
     <div align="center">
-      <canvas align="left" id="joyCanvas" width="150" height="150" style="border:5px solid #CCC;"></canvas>
+      <canvas align="left" id="joyCanvas" width="200" height="200" style="border:5px solid #CCC;"></canvas>
       <form name="motions">
 	<input type="button" value="バイバイ" onClick="doCommand('baibai');">
 	<input type="button" value="だばだば" onClick="doCommand('dabadaba');">
@@ -56,12 +56,12 @@
     <div align="center">
       <form name="head" action="#">
 	首左右角度
-	<input type="range" name="slider" min="-60" max="60" step="10" onchange="setHeadYawAngle(this.value);"/>
+	<input type="range" name="slider" min="-60" max="60" step="10" onchange="setHeadYawAngle(this.value);" id="tray_slider"/>
 	<span id="range">0</span>
       </form>
       <form name="head_pitch" action="#">
 	首縦角度
-	<input type="range" name="slider2" min="-60" max="60" step="10" onchange="setHeadPitchAngle(this.value);" value="0"/>
+	<input type="range" name="slider2" min="-60" max="60" step="10" onchange="setHeadPitchAngle(this.value);" value="0" id="head_pitch_slider"/>
 	<span id="head_pitch_value">0</span>
       </form>
     </div>
@@ -79,7 +79,7 @@
       </form>
     </div>
     <hr>
-    twitter: <a href="http://twitter.com/OTL">@OTL</a>
+    twitter: <a href="http://twitter.com/OTL">@OTL</a> <a href="http://twitter.com/tera_koji">@tera_koji</a>
 </body>
 </html>
 

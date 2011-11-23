@@ -36,9 +36,23 @@ function main() {
 	  			     } else {
 	  				 log('arm battery not found');
 	  			     }
+
+	  			     if (checkTopic(rsp, '/tray_state')) {
+				       initializeSlider('range','tray_slider','/tray_state');
+	  			     } else {
+	  			       log('tray_state not found');
+	  			     }
+	  			   if (checkTopic(rsp, '/pitch_state')) {
+				     initializeSlider('head_pitch_value',
+						      'head_pitch_slider',
+						      '/pitch_state');
+	  			   } else {
+	  			     log('pitch_state not found');
+	  			   }
+
 	  			 });
 	  // activate roomba
-	  connection.callService('/activate', '[]', function(){});
+	connection.callService('/activate', '[]', function(){});
 	log('activated roomba');
 	// publish for advertise
 	connection.publish('/cmd_vel', 'geometry_msgs/Twist', twistMsg(0,0));
