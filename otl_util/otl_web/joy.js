@@ -1,8 +1,8 @@
 var canvas;
 var ctx;
 var timerDrawID;  //描画タイマーID
-var cW = 150;  //キャンバス横サイズ
-var cH = 150;  //キャンバス縦サイズ
+var cW = 200;  //キャンバス横サイズ
+var cH = 200;  //キャンバス縦サイズ
 var mouseDownFlag = false;  //マウスダウンしているかどうか
 var mouseX1;  //ドラッグ開始した座標
 var mouseY1;  //ドラッグ開始した座標
@@ -32,8 +32,8 @@ function joy_init(){
   canvas.addEventListener("touchcancel", mouseUpListner, false);
   //オブジェクト
   obj = new Object();
-  obj.w = 40;
-  obj.h = 40;
+  obj.w = 80;
+  obj.h = 80;
   obj.x = cW*0.5 - obj.w * 0.5;
   obj.y = cH*0.5 - obj.h * 0.5;
 
@@ -56,9 +56,11 @@ function joy_draw() {
   ctx.fillStyle="#000000";
   ctx.beginPath();
 
-  ctx.rect(10, 10, cW-20, cH-20);
-  ctx.rect(30, 30, cW-60, cH-60);
-  ctx.rect(50, 50, cW-100, cH-100);
+  var i = 1;
+  for (i = 1; i<= 3; i++) {
+    ctx.rect(cW*0.1*i , cH*0.1*i, 
+	     cW-cW*0.2*i, cH-cH*0.2*i);
+  }
 
   ctx.moveTo(0,cH*0.5);
   ctx.lineTo(cW,cH*0.5);

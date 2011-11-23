@@ -205,4 +205,26 @@ function checkTopic (topics, target) {
   }
   return false;
 }
+
+Connection.prototype.delHandler = function(topic) {
+  this.handlers[topic] = function(){};
+}
+
   
+function initializeSlider(text_id,
+			  slider_id,
+			  topic) {
+  connection.addHandler(topic,
+			function(msg) {
+			  document.getElementById(text_id).innerHTML = msg.data;
+			  document.getElementById(slider_id).value = msg.data;
+			  // １回でおわり
+			  connection.delHandler(topic);
+			});
+  try {
+    connection.callService('/rosbridge/subscribe', '["' + topic + '", 0]', function(rsp){});
+    log(text_id + ' is connected');
+  } catch (error) {
+    log('error in subscribe' + topic);
+  }
+}
