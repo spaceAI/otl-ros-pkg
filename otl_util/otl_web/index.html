@@ -14,8 +14,7 @@
   </head>
   
   <body onload="main()">
-
-  <div align="center" style="position:fixed; right:1px"/>
+    <div align="center" style="position:fixed; right:1px"/>
     <div class="imagebox" style="float:right">
       <p class="image" id="arm_battery_img"><img src="img/battery0.png" height="40" width="40"/></P>
       <p class="caption">アーム</P>
@@ -31,55 +30,79 @@
       <p class="caption">PC</P>
       <p class="caption" id="pc_battery">0%</P>
     </div>
+</div>
+
+<div align="center">
+  <img src="img/logo.png"
+       style="position:float; width:250px; height:60px; top:0px;"/><br>
+</div>
+<div style="clear:both" />
+
+</div>
+
+<div align="center">
+  <img src="img/camera_dummy.jpg" alt="camera view" name="camera"
+       width="320" height="240"/>
+</div>
+
+<div>
+  <div align="center" id="joy_canvas_div">
+    本体移動(ドラッグしてください) <br />
+    <canvas align="left" id="joyCanvas" width="200" height="200" style="border:5px solid #CCC;"></canvas>
   </div>
-  <div align="center">
-      <img src="img/logo.png"
-	   style="position:float; width:250px; height:60px; top:0px;"/><br>
-    </div>
-    <div style="clear:both" />
+  
+  <div align="center" id="camera_angles_div">
+    <form name="camera_angles">
+      カメラ向き操作<br />
+      <input type="button" value="上" onClick="addHeadPitchAngle(-20.0);">
+      <br />
+      <input type="button" value="左" onClick="addHeadYawAngle(-20.0);">
+      <input type="button" value="右" onClick="addHeadYawAngle(20.0);">
+      <br />
+      <input type="button" value="下" onClick="addHeadPitchAngle(20.0);">
+    </form>
 
+    <form name="head_pitch" action="#">
+      縦角度
+      <input type="range" name="slider2" min="-60" max="60" step="20" onchange="setHeadPitchAngle(this.value);" value="0" id="head_pitch_slider"/>
+      <span id="head_pitch_value">0</span>
+    </form>
+
+    <form name="head" action="#">
+      横角度
+      <input type="range" name="slider" min="-60" max="60" step="20" onchange="setHeadYawAngle(this.value);" id="tray_slider" />
+      <span id="range">0</span>
+    </form>
   </div>
-
-    <div align="center">
-      <img src="img/camera_dummy.jpg" alt="camera view" name="camera"
-	   width="320" height="240"/>
-    </div>
-    <div align="center">
-      <canvas align="left" id="joyCanvas" width="200" height="200" style="border:5px solid #CCC;"></canvas>
-      <form name="motions">
-	<input type="button" value="バイバイ" onClick="doCommand('baibai');">
-	<input type="button" value="だばだば" onClick="doCommand('dabadaba');">
-	<input type="button" value="乾杯" onClick="doCommand('kanpai');">
-<!--	<input type="button" value="帰還" onClick="returnToDock();"> -->
-      </form>
-    </div>
-    <div align="center">
-      <form name="head" action="#">
-	首左右角度
-	<input type="range" name="slider" min="-60" max="60" step="10" onchange="setHeadYawAngle(this.value);" id="tray_slider"/>
-	<span id="range">0</span>
-      </form>
-      <form name="head_pitch" action="#">
-	首縦角度
-	<input type="range" name="slider2" min="-60" max="60" step="10" onchange="setHeadPitchAngle(this.value);" value="0" id="head_pitch_slider"/>
-	<span id="head_pitch_value">0</span>
-      </form>
-    </div>
+</div>
 
 
-    <div align="center">
-      ゆっくりしゃべる(ローマ字入力)<br>
-      <form name="talk" action="#">
-	<input type="text" name="talk_input" size="30" onkeypress="return talkEnter(event, this.value)" id="talk_input">
-      </form>
-    </div>
-    <div id="console" align="center">
-      <form name="log" action="#">
-	<textarea name="textarea" rows="3" cols="30" readonly="true" title="console"></textarea>
-      </form>
-    </div>
-    <hr>
-    twitter: <a href="http://twitter.com/OTL">@OTL</a> <a href="http://twitter.com/tera_koji">@tera_koji</a>
+<div align="center" id="arm_motion_div">
+  アームモーション <br />
+  <form name="motions">
+    <input type="button" value="バイバイ" onClick="doCommand('baibai');">
+    <input type="button" value="だばだば" onClick="doCommand('dabadaba');">
+    <input type="button" value="乾杯" onClick="doCommand('kanpai');">
+    <!--	<input type="button" value="帰還" onClick="returnToDock();"> -->
+  </form>
+</div>
+
+
+<div align="center" id="talk_div">
+  ゆっくりしゃべる(ローマ字入力)<br>
+  <form name="talk" action="#">
+    <input type="text" name="talk_input" size="30" onkeypress="return talkEnter(event, this.value)" id="talk_input">
+  </form>
+
+  <form name="log" action="#">
+    <textarea name="textarea" rows="3" cols="30" readonly="true" title="console"></textarea>
+  </form>
+
+<hr>
+Skype: 「otlroomba」につなぐとSkypeできます。<br />
+twitter: <a href="http://twitter.com/OTL">@OTL</a> <a href="http://twitter.com/tera_koji">@tera_koji</a>
+</div>
+
 </body>
 </html>
 
