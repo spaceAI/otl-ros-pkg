@@ -8,8 +8,8 @@ var mouseX1;  //ドラッグ開始した座標
 var mouseY1;  //ドラッグ開始した座標
 var mouseX2;  //ドラッグ中の座標
 var mouseY2;  //ドラッグ中の座標
-var dragDivX;  //ドラッグ開始地点と現在の差
-var dragDivY;  //ドラッグ開始地点と現在の差
+var dragDivX = 0;  //ドラッグ開始地点と現在の差
+var dragDivY = 0;  //ドラッグ開始地点と現在の差
 var obj;
 //ユーザーエージェント
 var isiPad;
@@ -54,27 +54,44 @@ function joy_draw() {
   //表示クリア
   ctx.clearRect(0, 0, cW, cH);
   ctx.fillStyle="#000000";
+  ctx.strokeStyle ="black";
   ctx.beginPath();
 
   var i = 1;
-  for (i = 1; i<= 3; i++) {
-    ctx.rect(cW*0.1*i , cH*0.1*i, 
-	     cW-cW*0.2*i, cH-cH*0.2*i);
+  for (i = 1; i<= 4; i++) {
+    //    ctx.rect(cW*0.1*i , cH*0.1*i, 
+    //	     cW-cW*0.2*i, cH-cH*0.2*i);
+    ctx.arc(cW * 0.5, cH*0.5, cW*0.15*i, 0, Math.PI*2,true);
   }
-
   ctx.moveTo(0,cH*0.5);
   ctx.lineTo(cW,cH*0.5);
   ctx.moveTo(cW*0.5,0);
   ctx.lineTo(cW*0.5,cH);
+  ctx.lineWidth = 5;
   ctx.stroke();
 
+  ctx.beginPath();
   //画像を描く
   if (mouseDownFlag) {
-    ctx.fillStyle="#FF0000";
-    ctx.fillRect(obj.x + dragDivX, obj.y + dragDivY, obj.w, obj.h);
+    ctx.fillStyle="rgba(250,0,0,0.5)"
+    ctx.arc(cW*0.5 + dragDivX, cH*0.5+ dragDivY,
+	    obj.w*0.4, 0, Math.PI*2,true);
+    ctx.fill();
+//    ctx.fillRect(obj.x + dragDivX, obj.y + dragDivY, obj.w, obj.h);
   } else {
-    ctx.fillRect(obj.x, obj.y, obj.w, obj.h);
+    ctx.fillStyle="rgba(100,100,100,0.5)"
+    ctx.arc(cW*0.5 + dragDivX, cH*0.5+ dragDivY,
+	    obj.w*0.4, 0, Math.PI*2,true);
+    ctx.fill();
   }
+
+  ctx.strokeStyle ="red";
+  ctx.lineWidth = 1;
+  ctx.font = "16pt Calibri";
+  ctx.strokeText("前", cW*0.5 - 20, 20);
+  ctx.strokeText("左", 5, cH*0.5);
+  ctx.strokeText("右", cH-20, cH*0.5);
+  ctx.strokeText("後", cW*0.5 - 20, cH-10);
 }
 
 function twistMsg(x, z) {
@@ -136,6 +153,8 @@ function dragEnd() {
   mouseDownFlag = false;
   obj.x = cW*0.5 - obj.w*0.5;
   obj.y = cH*0.5 - obj.h*0.5;
+  dragDivX = 0;
+  dragDivY = 0;
   connection.publish('/cmd_vel', 'geometry_msgs/Twist', twistMsg(0, 0));
   connection.publish('/cmd_vel', 'geometry_msgs/Twist', twistMsg(0, 0));
 

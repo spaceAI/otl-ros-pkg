@@ -67,9 +67,17 @@ function float64Msg(data) {
 }
 
 function setHeadYawAngle(angle) {
-  connection.publish('/tray_angle', 'std_msgs/Float64', float64Msg(angle));
-  document.getElementById("range").innerHTML = angle;
-  log('published head: ' + angle);
+  if (angle > -61 && angle < 61) {
+    connection.publish('/tray_angle', 'std_msgs/Float64', float64Msg(angle));
+    document.getElementById("range").innerHTML = angle;
+    log('published head: ' + angle);
+  }
+}
+
+function addHeadYawAngle(angle) {
+  new_angle = parseFloat(document.getElementById('tray_slider').value) + angle;
+  document.getElementById('tray_slider').value = new_angle;
+  setHeadYawAngle(new_angle);
 }
 
 function talkEnter(event, text) {
@@ -91,11 +99,19 @@ function setHeadPitchAngle(angle) {
   function float64Msg(data) {
     return '{"data":' + data + '.0}';
   }
-  connection.publish('/head_angle', 'std_msgs/Float64', float64Msg(angle));
-  document.getElementById("head_pitch_value").innerHTML = angle;
-  log('published head: ' + angle);
+  if (angle > -61 && angle < 61) {
+    connection.publish('/head_angle', 'std_msgs/Float64', float64Msg(angle));
+    document.getElementById("head_pitch_value").innerHTML = angle;
+    log('published head: ' + angle);
+  }
 }
 
+function addHeadPitchAngle(angle) {
+  new_angle = parseFloat(document.getElementById('head_pitch_slider').value);
+  new_angle += angle;
+  document.getElementById('head_pitch_slider').value = new_angle;
+  setHeadPitchAngle(new_angle);
+}
 /*
  function LogCanvas(id) {
  function waitForDOM(id) {
