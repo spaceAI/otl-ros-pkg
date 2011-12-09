@@ -43,23 +43,25 @@
 <div align="center">
   <img src="img/camera_dummy.jpg" alt="camera view" name="camera"
        width="320" height="240"/>
+ <img src="http://1.bp.blogspot.com/-Ls3L7r0uWb8/TtmogmEKJMI/AAAAAAAAM44/XwSSVVKQEMc/s1600/%25E5%2586%2599%25E7%259C%259F.JPG" width="100"/>
+
 </div>
 
 <div>
   <div align="center" id="joy_canvas_div">
-    本体移動(ドラッグしてください) <br />
+    本体移動(ドラッグしてください。前お勧め。) <br />
     <canvas align="left" id="joyCanvas" width="200" height="200" style="border:5px solid #CCC;"></canvas>
   </div>
   
   <div align="center" id="camera_angles_div">
     <form name="camera_angles">
       カメラ向き操作<br />
-      <input type="button" value="上" onClick="addHeadPitchAngle(-20.0);">
+      <input type="button" value="[ 上 ]" onClick="addHeadPitchAngle(-20.0);">
       <br />
-      <input type="button" value="左" onClick="addHeadYawAngle(-20.0);">
-      <input type="button" value="右" onClick="addHeadYawAngle(20.0);">
+      <input type="button" value="[ 左 ]" onClick="addHeadYawAngle(-20.0);">
+      <input type="button" value="[ 右 ]" onClick="addHeadYawAngle(20.0);">
       <br />
-      <input type="button" value="下" onClick="addHeadPitchAngle(20.0);">
+      <input type="button" value="[ 下 ]" onClick="addHeadPitchAngle(20.0);">
     </form>
 
     <form name="head_pitch" action="#">
@@ -80,13 +82,13 @@
 <div align="center" id="arm_motion_div">
   アームモーション <br />
   <form name="motions">
+    <input type="button" value="はなす・つかむ" onClick="doCommand('tsukamu');">
+    <input type="button" value="注ぐ" onClick="doCommand('kanpai');">
     <input type="button" value="バイバイ" onClick="doCommand('baibai');">
     <input type="button" value="だばだば" onClick="doCommand('dabadaba');">
-    <input type="button" value="乾杯" onClick="doCommand('kanpai');">
     <!--	<input type="button" value="帰還" onClick="returnToDock();"> -->
   </form>
 </div>
-
 
 <div align="center" id="talk_div">
   ゆっくりしゃべる(ローマ字入力)<br>
@@ -99,6 +101,7 @@
   </form>
 
 <hr>
+
 Skype: 「otlroomba」につなぐとSkypeできます。<br />
 twitter: <a href="http://twitter.com/OTL">@OTL</a> <a href="http://twitter.com/tera_koji">@tera_koji</a>
 </div>

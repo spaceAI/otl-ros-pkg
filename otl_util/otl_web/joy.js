@@ -141,7 +141,7 @@ function mouseMoveListner(e) {
     dragDivX = (mouseX2 - mouseX1);
     dragDivY = (mouseY2 - mouseY1);
     // ROS
-    connection.publish('/cmd_vel', 'geometry_msgs/Twist', twistMsg(dragDivY * 0.001, dragDivX * -0.003));
+    connection.publish('/cmd_vel', 'geometry_msgs/Twist', twistMsg(dragDivY * 0.0015, dragDivX * -0.004));
   }
 }
 
