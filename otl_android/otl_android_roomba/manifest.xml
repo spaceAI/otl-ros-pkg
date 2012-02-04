@@ -1,0 +1,26 @@
+<package>
+  <description brief="roomba controller using android sensor">
+
+    otl_android_roomba controls roomba by publishing geometry_msgs/Twist.
+    if you title your android phone, roomba go forward.
+
+  </description>
+  <author>Takashi Ogura</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/otl_android_roomba</url>
+
+  <depend package="rosjava" />
+  <depend package="geometry_msgs" />
+  <depend package="android_gingerbread" />
+
+  <export>
+    <rosjava-android-app target="android-10" />
+    <rosjava-src location="src" />
+    <rosjava-src location="gen" />
+    <rosjava-src location="res" />
+  </export>
+
+</package>
+
+
