@@ -17,17 +17,21 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import org.ros.RosCore;
 import org.ros.address.InetAddressFactory;
 import org.ros.android.MessageCallable;
+import org.ros.android.R;
 import org.ros.android.RosActivity;
 import org.ros.android.views.RosTextView;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMainExecutor;
+
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import com.ogutti.ros.android.roomba.R;
+//import com.sun.jndi.url.corbaname.corbanameURLContextFactory;
+
 import org.ros.message.geometry_msgs.Twist;
 
 /**
@@ -36,11 +40,11 @@ import org.ros.message.geometry_msgs.Twist;
  * @author t.ogura@gmail.com (OTL)
  */
 public class MainActivity extends RosActivity implements SensorEventListener {
-
+	private RosCore rosCore;
 	private RosTextView<Twist> rosTextView;
 	private SensorManager sensorManager;
 	private RoombaControllerNode controllerNode;
-	
+	private NodeMainExecutor nodeMainExecutor;
 	private static final double LINEAR_VELOCITY_RATE  = 0.05;
 	private static final double ANGULAR_VELOCITY_RATE = 0.1;
 
@@ -78,11 +82,21 @@ public class MainActivity extends RosActivity implements SensorEventListener {
 
 	@Override
 	protected void init(NodeMainExecutor nodeMainExecutor) {
+		// create for ROS core for local connection
+	    rosCore = RosCore.newPublic(getMasterUri().getHost(),
+	    		getMasterUri().getPort());
+	    rosCore.start();
+	    try {
+	      rosCore.awaitStart();
+	    } catch (Exception e) {
+	      throw new RuntimeException(e);
+	    }
 		// create ROS nodes
 		controllerNode = new RoombaControllerNode();
 		NodeConfiguration nodeConfiguration = NodeConfiguration
 				.newPublic(InetAddressFactory.newNonLoopback().getHostName());
 		nodeConfiguration.setMasterUri(this.getMasterUri());
+		this.nodeMainExecutor = nodeMainExecutor;
 		nodeMainExecutor.execute(controllerNode, nodeConfiguration);
 		nodeMainExecutor.execute(rosTextView, nodeConfiguration);
 
@@ -132,21 +146,8 @@ public class MainActivity extends RosActivity implements SensorEventListener {
 				controllerNode.publishDock();
 			}
 		});
-
 	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		sensorManager.unregisterListener(this);
-	}
-
+	  
 	@Override
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 	}
@@ -168,4 +169,12 @@ public class MainActivity extends RosActivity implements SensorEventListener {
 			controllerNode.publishVelocity(linearX, angularZ);
 		}
 	}
+	  @Override
+	  protected void onDestroy() {
+	    super.onDestroy();
+		sensorManager.unregisterListener(this);
+	    // RosCore should be shut down last since running Nodes will attempt to
+	    // unregister at shutdown.
+	    rosCore.shutdown();
+	  }	
 }
