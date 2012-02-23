@@ -15,10 +15,11 @@
                   android:id="@+id/top_bar" />
     <!--Add your layout here -->
     <ImageView
-       android:id="@+id/imageView1"
+       android:id="@+id/imageView"
        android:layout_width="match_parent"
        android:layout_height="140dp"
-       android:src="@drawable/otl_logo" android:background="@android:color/white"/>
+       android:src="@drawable/droid_s"
+       android:background="@android:color/white"/>
  
    <TextView
       android:id="@+id/velocity_text"

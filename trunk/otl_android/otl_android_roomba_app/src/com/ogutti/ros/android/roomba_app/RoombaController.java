@@ -14,19 +14,25 @@
  * the License.
  */
 package com.ogutti.ros.android.roomba_app;
-
 import com.ogutti.ros.android.roomba_app.RoombaProxy;
 import ros.android.activity.RosAppActivity;
-import android.os.Bundle;
+
 import org.ros.node.Node;
+import org.ros.android.R;
+import org.ros.android.RosActivity;
+
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.HashMap;
+
+import android.os.Bundle;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import java.text.DecimalFormat;
-import java.util.List;
-import android.os.Bundle;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -36,17 +42,14 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import org.ros.address.InetAddressFactory;
-import org.ros.android.MessageCallable;
-import org.ros.android.R;
-import org.ros.android.RosActivity;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import org.ros.message.geometry_msgs.Twist;
 
+import android.widget.ImageView;
+import android.graphics.drawable.Drawable;
 
 /**
  * @author t.ogura@gmail.com (Takashi Ogura)
@@ -58,7 +61,7 @@ public class RoombaController extends RosAppActivity implements SensorEventListe
   private RoombaProxy controllerNode;
   private double linearVelocityRate;
   private double angularVelocityRate;
-  
+  private HashMap<String, Drawable> droidBitmap;
   private static final double LINEAR_VELOCITY_RATE  = 0.08;
   private static final double ANGULAR_VELOCITY_RATE = 0.2;
   
@@ -67,12 +70,20 @@ public class RoombaController extends RosAppActivity implements SensorEventListe
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    setDefaultAppName("otl_android_roomba");
+    setDefaultAppName("otl_android_roomba_app");
     setDashboardResource(R.id.top_bar);
     setMainWindowResource(R.layout.main);
+
+    droidBitmap = new HashMap<String, Drawable>();
     super.onCreate(savedInstanceState);
     speedRate = 0.5;
 
+    droidBitmap.put("stop", getResources().getDrawable(R.drawable.droid_s));
+    droidBitmap.put("forward", getResources().getDrawable(R.drawable.droid_f));
+    droidBitmap.put("backward", getResources().getDrawable(R.drawable.droid_b));
+    droidBitmap.put("right", getResources().getDrawable(R.drawable.droid_r));
+    droidBitmap.put("left", getResources().getDrawable(R.drawable.droid_l));
+                    
     topicName = "cmd_vel";
     linearVelocityRate = LINEAR_VELOCITY_RATE;
     angularVelocityRate = ANGULAR_VELOCITY_RATE;
@@ -172,6 +183,19 @@ public class RoombaController extends RosAppActivity implements SensorEventListe
       if (Math.abs(angularZ) < angularVelocityRate) {
         angularZ = 0.0d;
       }
+      ImageView imageView = (ImageView)findViewById(R.id.imageView);
+      if (linearX > 0.0) {
+        imageView.setImageDrawable(droidBitmap.get("forward"));
+      } else if (linearX < 0.0) {
+        imageView.setImageDrawable(droidBitmap.get("backward"));
+      } else if (angularZ > 0.0) {
+        imageView.setImageDrawable(droidBitmap.get("left"));
+      } else if (angularZ < 0.0) {
+        imageView.setImageDrawable(droidBitmap.get("right"));
+      } else {
+        imageView.setImageDrawable(droidBitmap.get("stop"));
+      }
+      
       try {
         DecimalFormat df = new DecimalFormat("0");
         df.setMaximumFractionDigits(2);
