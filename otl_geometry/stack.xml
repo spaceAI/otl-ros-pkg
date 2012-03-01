@@ -1,9 +1,0 @@
-<stack>
-  <description brief="otl_geometry">otl_geometry is geometric libraries of OTL</description>
-  <author>Maintained by Takashi Ogura</author>
-  <license>BSD</license>  
-  <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/otl_geometry</url>
-  <depend stack="ros" />
-
-</stack>
