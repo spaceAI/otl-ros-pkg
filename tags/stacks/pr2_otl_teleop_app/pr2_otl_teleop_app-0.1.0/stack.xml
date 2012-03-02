@@ -1,0 +1,9 @@
+<stack>
+  <description brief="pr2_otl_teleop_app">pr2_otl_teleop_app</description>
+  <author>Maintained by Takashi Ogura</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pr2_otl_teleop_app</url>
+  <depend stack="ros" />
+
+</stack>
