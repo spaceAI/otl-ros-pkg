@@ -1,9 +1,0 @@
-<stack>
-  <description brief="otl_util">otl_util</description>
-  <author>Maintained by Takashi Ogura</author>
-  <license>BSD</license>  
-  <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/otl_util</url>
-  <depend stack="ros" />
-
-</stack>

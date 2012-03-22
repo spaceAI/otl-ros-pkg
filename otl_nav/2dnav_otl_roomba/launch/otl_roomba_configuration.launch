@@ -1,5 +1,0 @@
-<launch>
-  <remap from="/roomba/command" to="/cmd_vel"/>
-  <node pkg="otl_roomba" type="roomba_twist_node.py" name="roomba"/>
-  <include file="$(find hokuyo_node)/hokuyo_test.launch"/>
-</launch>
